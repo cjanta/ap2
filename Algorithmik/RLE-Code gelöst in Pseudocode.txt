@@ -1,0 +1,30 @@
+
+Erstellen Sie ein Programm, das auf diese Weise komprimiert.
+Das Programm soll Buchstaben statt RGB Farben komprimieren, 
+indem die Wiederholung der Buchstaben gezählt werden und als Zahl vor den Buchstaben gesetzt wird, 
+
+z.B.: PPPPMYYDDDDDDD ergibt 4P1M2Y7D (weil 4xP, 1xM, 2xY, 7xD).
+
+Lassen Sie in dem Programm anschließend die folgenden Strings durchlaufen:
+
+YYYBBBBWBYYBBRRDBBYBBRRRRBBBBRRRRRRBBBPPPPPPBMBPPPPCPBMMPPOPPPBGBPPOPPPBGGGGGGGGG
+
+CWWCCCCYYWWWWCOCYYCWWCCOWCCCCCCWOWWCCCCWWOWWWCRRRRRRRRCCRRRRRRCBBBRRRRBBBBBBBBBBB
+
+
+Lösungsbeispiel:
+
+zeichenkette := "CCCGGCCCCCCGGGGCCCCCGGGGCCCCCCOOCCCCCCCOOCCCCCCCOOCOSCGGGOOGGSSGGGOOGGOGGGGGGGGGG"
+ergebnis := ""
+counter := 0
+		
+Von i := 0 bis zeichenkette.length
+	counter++;
+	Wenn i = zeichenkette.length-1 oder zeichenkette.getZeichen(i) != zeichenkette.getZeichen(i+1)
+		ergebnis += "" + counter + zeichenkette.getZeichen(i)
+		counter := 0
+	Ende Wenn
+Ende Von
+
+Ausgabe ergebnis
+
