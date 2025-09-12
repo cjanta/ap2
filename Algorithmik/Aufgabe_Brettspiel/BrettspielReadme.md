@@ -25,3 +25,24 @@ bzw.	+ setEigenschaft(Eigenschaft : Datentyp) : void
 ```
 
 Statische Methoden / Klassenvariablen werden im Klassendiagramm mit {static} am Ende gekennzeichnet um im Pseudocode mit static wie im Quellcode.
+
+# Pseudocode Lösungsansatz
+
+Klasse Spieler
+	- name: String
+	- level: int
+	- weapon: String
+	- enemyLevel: int {static}
+	- sumPlayers: int {static}
+	- sumPlayerLevel: int {static}
+
+	+ getName(): String
+		Rückgabe name
+	Ende getName
+
+	+ setName(name: String): void
+		this.name := name
+	Ende setName
+
+	...
+Ende Spieler
