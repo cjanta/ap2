@@ -1,0 +1,64 @@
+
+# Kursprotokoll
+15.09.2025
+- Überlick und Ablauf der Prüfungen und Projektabrbeit
+- http://caesborn.de/pruefungspage/index.html
+- Probeklausur
+
+# Themen und Anmerkungen
+## Punkte der schriftlichen Prüfung
+Gesamt: 300 Punkte
+- Punktespender:
+    - WISO: 70-80
+    - Datenbanken und Normalisierung und SQL: 50
+    - Projektmanagement: 25
+    - Programmierung: 20-35
+    - UML: ca.40 (Sequenzdiagramm kommt öfters)
+
+# WISO Probefragen
+
+## Probezeiten
+- Arbeitnehmer kann Probezeit haben: 0-6 Monate
+- Probezeiten in der Ausbildung: 1-4 Monate
+
+## Rechtsformen HGB -> Handelsgesetzbuch
+Abteilung A: Personengesellschaften
+
+### TODO Personengesellschaften
+
+### Abteilung B: Kapitalgesellschaften
+
+### GmbH
+Gesellschaft mit beschränkter Haftung
+- Haftung nur mit der Einlage
+- Gewinn: Gesellschafter nach Gesellschaftervertrag
+- Mindesteinlage: € 25000,-
+- Geschäftsführer/in
+- Oberstes Organ: Gesellschafterversammlung
+
+### Aktiengesellschaft
+- Haftung nur mit der Einlage
+- Gewinn: Dividende - Entscheidung durch Hauptversammlung
+- Hauptversammlung wählt den Aufsichtsrat:
+    - Überwacht Vorstand, bestellt Vorstand und kann diesen auch rausschmeißen
+- Vorstand leitet Unternehmen
+- € 50000,-
+- Oberstes Organg: Hauptversammlung
+
+### Societas Europaea, kurz SE
+- 120.000,-
+- Wie AG
+- Hauptsitz in EU frei wählbar
+
+### GmbH & Co KG
+Komplementär -> Kommanditisten
+Gmbh -> Komplementär
+... TODO Foie weg :()
+
+## Arbeitnehmerrechte
+Darauf aufbauhend und nie schlechter:
+1. Gesetzliche Grundlage ->
+2. Manteltarifvertrag (10 Jahre) ->
+3. Tarifvertrag(Lohn- und Gehalt, 1-2 Jahre) ->
+4. Betriebsvereinbarung ->
+5. Einzelarbeitsvertrag
