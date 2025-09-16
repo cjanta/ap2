@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎓 Datenbank-Normalisierung: Interaktive Schulung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .training-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .training-section.active {
+            display: block;
+        }
+        
+        .step-header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        
+        .step-number {
+            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .problem-highlight {
+            background: #ffebee !important;
+            border-left: 4px solid #f44336;
+        }
+        
+        .solution-highlight {
+            background: #e8f5e8 !important;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .explanation-box {
+            background: #f8f9ff;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .definition-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .success-box {
+            background: #e8f5e8;
+            border-left: 4px solid #4CAF50;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .error-box {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .navigation {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .nav-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 0 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .sql-code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            height: 6px;
+            border-radius: 3px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: white;
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .interactive-element {
+            background: #f0f8ff;
+            border: 2px dashed #4CAF50;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .quiz-option {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-option:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+        
+        .quiz-option.correct {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .quiz-option.wrong {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Datenbank-Normalisierung</h1>
+            <p>Interaktive Schulung: Von 1NF bis 3NF</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 11%"></div>
+            </div>
+        </div>
+
+        <!-- Schritt 0: Einführung -->
+        <div class="training-section active" id="step0">
+            <div class="step-header">
+                <div class="step-number">🎯</div>
+                <div>Einführung: Warum Normalisierung?</div>
+            </div>
+            
+            <div class="explanation-box">
+                <h3>🤔 Das Problem unnormalisierter Daten</h3>
+                <p>Stellen Sie sich vor, Sie verwalten Mitarbeiterdaten in einer einzigen großen Tabelle. Was passiert dann?</p>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>P#</th>
+                            <th>P_Name</th>
+                            <th>Abt#</th>
+                            <th>Abt-Name</th>
+                            <th>Pj#</th>
+                            <th>Pj-Name</th>
+                            <th>Pj-Std</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="problem-highlight">
+                            <td>101</td>
+                            <td>Müller</td>
+                            <td>1</td>
+                            <td>Motoren</td>
+                            <td>I1</td>
+                            <td>A</td>
+                            <td>60</td>
+                        </tr>
+                        <tr class="problem-highlight">
+                            <td>101</td>
+                            <td>Müller</td>
+                            <td>1</td>
+                            <td>Motoren</td>
+                            <td>I2</td>
+                            <td>B</td>
+                            <td>40</td>
+                        </tr>
+                        <tr>
+                            <td>102</td>
+                            <td>Meier</td>
+                            <td>2</td>
+                            <td>Karosserie</td>
+                            <td>I3</td>
+                            <td>C</td>
+                            <td>100</td>
+                        </tr>
+                        <tr class="problem-highlight">
+                            <td>103</td>
+                            <td>Krause</td>
+                            <td>2</td>
+                            <td>Karosserie</td>
+                            <td>I1</td>
+                            <td>A</td>
+                            <td>20</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="error-box">
+                <h3>⚠️ Erkannte Probleme:</h3>
+                <ul>
+                    <li><strong>Redundanz:</strong> "Müller" und "Motoren" werden mehrfach gespeichert</li>
+                    <li><strong>Inkonsistenz-Risiko:</strong> Was, wenn wir "Motoren" zu "Motor-Abteilung" ändern wollen?</li>
+                    <li><strong>Speicherverschwendung:</strong> Gleiche Informationen in verschiedenen Zeilen</li>
+                    <li><strong>Update-Anomalien:</strong> Änderungen müssen an mehreren Stellen gemacht werden</li>
+                </ul>
+            </div>
+            
+            <div class="success-box">
+                <h3>✅ Die Lösung: Normalisierung!</h3>
+                <p>Durch systematische Normalisierung teilen wir die Tabelle in mehrere kleinere, logisch zusammenhängende Tabellen auf.</p>
+                <p><strong>Ziel:</strong> Jede Information wird nur einmal gespeichert!</p>
+            </div>
+        </div>
+
+        <!-- Schritt 1: 1NF -->
+        <div class="training-section" id="step1">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div>Erste Normalform (1NF)</div>
+            </div>
+            
+            <div class="definition-box">
+                <h3>📖 Definition 1NF:</h3>
+                <p>Eine Tabelle ist in der <strong>Ersten Normalform (1NF)</strong>, wenn:</p>
+                <ul>
+                    <li>✅ Jede Zelle enthält genau <strong>einen atomaren Wert</strong></li>
+                    <li>✅ Keine wiederholenden Gruppen oder Arrays</li>
+                    <li>✅ Eindeutige Spaltennamen</li>
+                    <li>✅ Einheitliche Datentypen pro Spalte</li>
+                </ul>
+            </div>
+            
+            <h3>🔍 Prüfung unserer Tabelle:</h3>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Spalte</th>
+                            <th>Beispielwerte</th>
+                            <th>Atomarität</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="solution-highlight">
+                            <td>P#</td>
+                            <td>101, 102, 103</td>
+                            <td>Einzelne Zahlen</td>
+                            <td>✅ Atomar</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>P_Name</td>
+                            <td>"Müller", "Meier"</td>
+                            <td>Einzelne Namen</td>
+                            <td>✅ Atomar</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>Abt#</td>
+                            <td>1, 2</td>
+                            <td>Einzelne Zahlen</td>
+                            <td>✅ Atomar</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>Pj-Std</td>
+                            <td>60, 40, 100</td>
+                            <td>Einzelne Zahlen</td>
+                            <td>✅ Atomar</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="success-box">
+                <h3>🎉 Ergebnis: 1NF erfüllt!</h3>
+                <p>Unsere Tabelle ist bereits in der ersten Normalform. Alle Zellen enthalten atomare Werte.</p>
+                <p><strong>Nächster Schritt:</strong> Prüfung der zweiten Normalform...</p>
+            </div>
+            
+            <div class="interactive-element">
+                <h3>🧠 Verständnis-Check:</h3>
+                <p>Welche der folgenden Zellen würde gegen 1NF verstoßen?</p>
+                <div class="quiz-option" onclick="selectQuiz(this, false)">A) "Schmidt"</div>
+                <div class="quiz-option" onclick="selectQuiz(this, false)">B) 42</div>
+                <div class="quiz-option" onclick="selectQuiz(this, true)">C) "Müller, Meyer, Schmidt"</div>
+                <div class="quiz-option" onclick="selectQuiz(this, false)">D) "Motoren"</div>
+            </div>
+        </div>
+
+        <!-- Schritt 2: Primärschlüssel -->
+        <div class="training-section" id="step2">
+            <div class="step-header">
+                <div class="step-number">🔑</div>
+                <div>Primärschlüssel identifizieren</div>
+            </div>
+            
+            <div class="explanation-box">
+                <h3>🎯 Was ist ein Primärschlüssel?</h3>
+                <p>Ein Primärschlüssel ist eine Spalte (oder Spaltenkombination), die jede Zeile in der Tabelle <strong>eindeutig identifiziert</strong>.</p>
+                <p><strong>Anforderungen:</strong></p>
+                <ul>
+                    <li>Eindeutigkeit: Keine zwei Zeilen haben denselben Primärschlüssel</li>
+                    <li>Nicht-null: Primärschlüssel darf nie leer sein</li>
+                    <li>Unveränderlich: Sollte sich nicht häufig ändern</li>
+                </ul>
+            </div>
+            
+            <h3>🔍 Analyse der Kandidaten:</h3>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kandidat</th>
+                            <th>Eindeutige Werte</th>
+                            <th>Gesamtzeilen</th>
+                            <th>Eindeutigkeit</th>
+                            <th>Geeignet?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="problem-highlight">
+                            <td>P#</td>
+                            <td>4 (101,102,103,104)</td>
+                            <td>8</td>
+                            <td>50%</td>
+                            <td>❌ Nicht eindeutig</td>
+                        </tr>
+                        <tr class="problem-highlight">
+                            <td>Pj#</td>
+                            <td>3 (I1,I2,I3)</td>
+                            <td>8</td>
+                            <td>37.5%</td>
+                            <td>❌ Nicht eindeutig</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>(P#, Pj#)</td>
+                            <td>8 Kombinationen</td>
+                            <td>8</td>
+                            <td>100%</td>
+                            <td>✅ Vollständig eindeutig</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="explanation-box">
+                <h3>💡 Warum brauchen wir einen zusammengesetzten Schlüssel?</h3>
+                <p>Unsere Daten zeigen eine <strong>n:m Beziehung</strong>:</p>
+                <ul>
+                    <li>📋 Ein Mitarbeiter kann an mehreren Projekten arbeiten</li>
+                    <li>📁 Ein Projekt kann mehrere Mitarbeiter haben</li>
+                    <li>🔗 Daher: Kombinationsschlüssel (P#, Pj#) erforderlich</li>
+                </ul>
+            </div>
+            
+            <div class="success-box">
+                <h3>🎯 Primärschlüssel gefunden!</h3>
+                <p><strong>Primärschlüssel: (P#, Pj#)</strong></p>
+                <p>Diese Kombination identifiziert eindeutig, welcher Mitarbeiter an welchem Projekt arbeitet.</p>
+            </div>
+        </div>
+
+        <!-- Schritt 3: Funktionale Abhängigkeiten -->
+        <div class="training-section" id="step3">
+            <div class="step-header">
+                <div class="step-number">🔗</div>
+                <div>Funktionale Abhängigkeiten</div>
+            </div>
+            
+            <div class="definition-box">
+                <h3>📖 Was sind funktionale Abhängigkeiten?</h3>
+                <p><strong>X → Y</strong> bedeutet: "Wenn ich X kenne, kann ich Y eindeutig bestimmen"</p>
+                <p><strong>Beispiel:</strong> P# → P_Name<br>
+                Wenn ich die Personalnummer kenne, kenne ich eindeutig den Namen.</p>
+            </div>
+            
+            <h3>🔍 Identifizierte Abhängigkeiten:</h3>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Determinant</th>
+                            <th>Abhängige Attribute</th>
+                            <th>Beispiel</th>
+                            <th>Erklärung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>P#</strong></td>
+                            <td>P_Name, Abt#</td>
+                            <td>101 → "Müller", 1</td>
+                            <td>Personalnummer bestimmt Name und Abteilung</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Abt#</strong></td>
+                            <td>Abt-Name</td>
+                            <td>1 → "Motoren"</td>
+                            <td>Abteilungsnummer bestimmt Abteilungsname</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pj#</strong></td>
+                            <td>Pj-Name</td>
+                            <td>I1 → "A"</td>
+                            <td>Projektnummer bestimmt Projektname</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td><strong>(P#, Pj#)</strong></td>
+                            <td>Pj-Std</td>
+                            <td>(101, I1) → 60</td>
+                            <td>Person + Projekt bestimmt Stunden</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="explanation-box">
+                <h3>🎯 Wichtige Erkenntnis:</h3>
+                <p>Nicht alle Attribute hängen vom <strong>gesamten</strong> Primärschlüssel ab!</p>
+                <ul>
+                    <li>❌ P_Name hängt nur von P# ab (nicht von Pj#)</li>
+                    <li>❌ Pj-Name hängt nur von Pj# ab (nicht von P#)</li>
+                    <li>✅ Nur Pj-Std hängt von beiden ab</li>
+                </ul>
+                <p><strong>Das ist ein Problem für die 2. Normalform!</strong></p>
+            </div>
+        </div>
+
+        <!-- Schritt 4: 2NF Problem -->
+        <div class="training-section" id="step4">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div>Zweite Normalform (2NF) - Problemanalyse</div>
+            </div>
+            
+            <div class="definition-box">
+                <h3>📖 Definition 2NF:</h3>
+                <p>Eine Tabelle ist in der <strong>Zweiten Normalform (2NF)</strong>, wenn:</p>
+                <ul>
+                    <li>✅ Sie ist in 1NF</li>
+                    <li>✅ Jedes Nicht-Schlüssel-Attribut ist <strong>voll funktional abhängig</strong> vom gesamten Primärschlüssel</li>
+                </ul>
+                <p><strong>Bedeutet:</strong> Keine "partiellen Abhängigkeiten"</p>
+            </div>
+            
+            <div class="error-box">
+                <h3>🚨 2NF-Verletzungen in unserer Tabelle:</h3>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Attribut</th>
+                                <th>Abhängig von</th>
+                                <th>Primärschlüssel</th>
+                                <th>Problem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="problem-highlight">
+                                <td>P_Name</td>
+                                <td>nur P#</td>
+                                <td>(P#, Pj#)</td>
+                                <td>❌ Partielle Abhängigkeit</td>
+                            </tr>
+                            <tr class="problem-highlight">
+                                <td>Abt#</td>
+                                <td>nur P#</td>
+                                <td>(P#, Pj#)</td>
+                                <td>❌ Partielle Abhängigkeit</td>
+                            </tr>
+                            <tr class="problem-highlight">
+                                <td>Abt-Name</td>
+                                <td>nur P#</td>
+                                <td>(P#, Pj#)</td>
+                                <td>❌ Partielle Abhängigkeit</td>
+                            </tr>
+                            <tr class="problem-highlight">
+                                <td>Pj-Name</td>
+                                <td>nur Pj#</td>
+                                <td>(P#, Pj#)</td>
+                                <td>❌ Partielle Abhängigkeit</td>
+                            </tr>
+                            <tr class="solution-highlight">
+                                <td>Pj-Std</td>
+                                <td>(P#, Pj#)</td>
+                                <td>(P#, Pj#)</td>
+                                <td>✅ Voll funktional abhängig</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="explanation-box">
+                <h3>⚠️ Probleme durch partielle Abhängigkeiten:</h3>
+                <ul>
+                    <li><strong>Redundanz:</strong> "Müller" steht in zwei Zeilen</li>
+                    <li><strong>Update-Anomalie:</strong> Name ändern = mehrere Updates</li>
+                    <li><strong>Insert-Anomalie:</strong> Neuer Mitarbeiter ohne Projekt nicht möglich</li>
+                    <li><strong>Delete-Anomalie:</strong> Letztes Projekt löschen = Mitarbeiterinfo weg</li>
+                </ul>
+            </div>
+            
+            <div class="interactive-element">
+                <h3>🧠 Quiz: 2NF verstehen</h3>
+                <p>Warum ist "P_Name" nicht voll funktional abhängig vom Primärschlüssel (P#, Pj#)?</p>
+                <div class="quiz-option" onclick="selectQuiz(this, false)">A) P_Name hängt von beiden ab</div>
+                <div class="quiz-option" onclick="selectQuiz(this, true)">B) P_Name hängt nur von P# ab, nicht von Pj#</div>
+                <div class="quiz-option" onclick="selectQuiz(this, false)">C) P_Name ist kein Attribut</div>
+                <div class="quiz-option" onclick="selectQuiz(this, false)">D) P_Name ist der Primärschlüssel</div>
+            </div>
+        </div>
+
+        <!-- Schritt 5: 2NF Lösung -->
+        <div class="training-section" id="step5">
+            <div class="step-header">
+                <div class="step-number">🔧</div>
+                <div>2NF-Normalisierung durchführen</div>
+            </div>
+            
+            <div class="explanation-box">
+                <h3>🎯 Lösungsstrategie:</h3>
+                <p>Wir teilen die Tabelle nach funktionalen Abhängigkeiten auf:</p>
+                <ul>
+                    <li>🏢 <strong>Personal-Tabelle:</strong> P# → P_Name, Abt#, Abt-Name</li>
+                    <li>📁 <strong>Projekte-Tabelle:</strong> Pj# → Pj-Name</li>
+                    <li>🔗 <strong>Zuordnungs-Tabelle:</strong> (P#, Pj#) → Pj-Std</li>
+                </ul>
+            </div>
+            
+            <h3>📊 Tabelle 1: Personal</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>P#</th>
+                            <th>P_Name</th>
+                            <th>Abt#</th>
+                            <th>Abt-Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="solution-highlight">
+                            <td>101</td>
+                            <td>Müller</td>
+                            <td>1</td>
+                            <td>Motoren</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>102</td>
+                            <td>Meier</td>
+                            <td>2</td>
+                            <td>Karosserie</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>103</td>
+                            <td>Krause</td>
+                            <td>2</td>
+                            <td>Karosserie</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>104</td>
+                            <td>Schmidt</td>
+                            <td>1</td>
+                            <td>Motoren</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><strong>Primärschlüssel:</strong> P# | <strong>Abhängigkeit:</strong> P# → P_Name, Abt#, Abt-Name</p>
+            
+            <h3>📊 Tabelle 2: Projekte</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pj#</th>
+                            <th>Pj-Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="solution-highlight">
+                            <td>I1</td>
+                            <td>A</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>I2</td>
+                            <td>B</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>I3</td>
+                            <td>C</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><strong>Primärschlüssel:</strong> Pj# | <strong>Abhängigkeit:</strong> Pj# → Pj-Name</p>
+            
+            <h3>📊 Tabelle 3: Personal_Projekte</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>P#</th>
+                            <th>Pj#</th>
+                            <th>Pj-Std</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="solution-highlight">
+                            <td>101</td>
+                            <td>I1</td>
+                            <td>60</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>101</td>
+                            <td>I2</td>
+                            <td>40</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>102</td>
+                            <td>I3</td>
+                            <td>100</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>103</td>
+                            <td>I1</td>
+                            <td>20</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>103</td>
+                            <td>I2</td>
+                            <td>50</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>103</td>
+                            <td>I3</td>
+                            <td>30</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>104</td>
+                            <td>I1</td>
+                            <td>80</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>104</td>
+                            <td>I3</td>
+                            <td>20</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><strong>Primärschlüssel:</strong> (P#, Pj#) | <strong>Abhängigkeit:</strong> (P#, Pj#) → Pj-Std</p>
+            
+            <div class="success-box">
+                <h3>✅ 2NF erreicht!</h3>
+                <p>Alle partiellen Abhängigkeiten wurden eliminiert. Jedes Nicht-Schlüssel-Attribut hängt voll funktional von seinem Primärschlüssel ab.</p>
+            </div>
+        </div>
+
+        <!-- Schritt 6: 3NF Problem -->
+        <div class="training-section" id="step6">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <div>Dritte Normalform (3NF) - Problemanalyse</div>
+            </div>
+            
+            <div class="definition-box">
+                <h3>📖 Definition 3NF:</h3>
+                <p>Eine Tabelle ist in der <strong>Dritten Normalform (3NF)</strong>, wenn:</p>
+                <ul>
+                    <li>✅ Sie ist in 2NF</li>
+                    <li>✅ Es gibt keine <strong>transitiven Abhängigkeiten</strong></li>
+                </ul>
+                <p><strong>Transitive Abhängigkeit:</strong> A → B → C (A bestimmt C über B)</p>
+            </div>
+            
+            <div class="error-box">
+                <h3>🚨 3NF-Problem in der Personal-Tabelle:</h3>
+                
+                <div class="explanation-box">
+                    <h4>🔗 Abhängigkeitskette entdeckt:</h4>
+                    <div style="text-align: center; font-size: 1.2rem; margin: 20px 0;">
+                        <strong>P# → Abt# → Abt-Name</strong>
+                    </div>
+                    <div style="text-align: center;">
+                        ↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+                        101 → 1 → "Motoren"<br>
+                        104 → 1 → "Motoren"
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Abhängigkeit</th>
+                                <th>Typ</th>
+                                <th>Problem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="solution-highlight">
+                                <td>P# → P_Name</td>
+                                <td>Direkt</td>
+                                <td>✅ Kein Problem</td>
+                            </tr>
+                            <tr class="solution-highlight">
+                                <td>P# → Abt#</td>
+                                <td>Direkt</td>
+                                <td>✅ Kein Problem</td>
+                            </tr>
+                            <tr class="problem-highlight">
+                                <td>P# → Abt# → Abt-Name</td>
+                                <td>Transitiv</td>
+                                <td>❌ Verletzt 3NF</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="explanation-box">
+                <h3>⚠️ Probleme durch transitive Abhängigkeiten:</h3>
+                <ul>
+                    <li><strong>Redundanz:</strong> "Motoren" wird in mehreren Zeilen gespeichert</li>
+                    <li><strong>Update-Anomalie:</strong> Abteilungsname ändern = mehrere Updates nötig</li>
+                    <li><strong>Insert-Anomalie:</strong> Neue Abteilung ohne Mitarbeiter nicht speicherbar</li>
+                    <li><strong>Delete-Anomalie:</strong> Letzter Mitarbeiter löschen = Abteilungsinfo verloren</li>
+                </ul>
+            </div>
+            
+            <div class="interactive-element">
+                <h3>🧠 Verständnis-Check:</h3>
+                <p>Was bedeutet die transitive Abhängigkeit P# → Abt# → Abt-Name?</p>
+                <div class="quiz-option" onclick="selectQuiz(this, false)">A) P# hängt direkt von Abt-Name ab</div>
+                <div class="quiz-option" onclick="selectQuiz(this, true)">B) Abt-Name hängt indirekt von P# ab (über Abt#)</div>
+                <div class="quiz-option" onclick="selectQuiz(this, false)">C) Alle Attribute sind unabhängig</div>
+                <div class="quiz-option" onclick="selectQuiz(this, false)">D) Es gibt keine Abhängigkeiten</div>
+            </div>
+        </div>
+
+        <!-- Schritt 7: 3NF Lösung -->
+        <div class="training-section" id="step7">
+            <div class="step-header">
+                <div class="step-number">🎯</div>
+                <div>3NF-Normalisierung durchführen</div>
+            </div>
+            
+            <div class="explanation-box">
+                <h3>🔧 Lösungsstrategie:</h3>
+                <p>Wir separieren die transitive Abhängigkeit:</p>
+                <ul>
+                    <li>🏢 <strong>Abteilungen-Tabelle:</strong> Abt# → Abt-Name</li>
+                    <li>👥 <strong>Personal-Tabelle (bereinigt):</strong> P# → P_Name, Abt#</li>
+                </ul>
+            </div>
+            
+            <h3>📊 Neue Tabelle: Abteilungen</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Abt#</th>
+                            <th>Abt-Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="solution-highlight">
+                            <td>1</td>
+                            <td>Motoren</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>2</td>
+                            <td>Karosserie</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><strong>Primärschlüssel:</strong> Abt# | <strong>Abhängigkeit:</strong> Abt# → Abt-Name</p>
+            
+            <h3>📊 Bereinigte Tabelle: Personal</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>P#</th>
+                            <th>P_Name</th>
+                            <th>Abt# (FK)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="solution-highlight">
+                            <td>101</td>
+                            <td>Müller</td>
+                            <td>1</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>102</td>
+                            <td>Meier</td>
+                            <td>2</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>103</td>
+                            <td>Krause</td>
+                            <td>2</td>
+                        </tr>
+                        <tr class="solution-highlight">
+                            <td>104</td>
+                            <td>Schmidt</td>
+                            <td>1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><strong>Primärschlüssel:</strong> P# | <strong>Fremdschlüssel:</strong> Abt# → Abteilungen.Abt#</p>
+            
+            <div class="success-box">
+                <h3>✅ 3NF erreicht!</h3>
+                <p>Alle transitiven Abhängigkeiten wurden eliminiert. Jede Information wird nur noch einmal gespeichert.</p>
+                
+                <h4>🎉 Finale Tabellenstruktur (3NF):</h4>
+                <ol>
+                    <li><strong>Abteilungen:</strong> 2 Zeilen</li>
+                    <li><strong>Personal:</strong> 4 Zeilen</li>
+                    <li><strong>Projekte:</strong> 3 Zeilen</li>
+                    <li><strong>Personal_Projekte:</strong> 8 Zeilen</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Schritt 8: SQL-Umsetzung -->
+        <div class="training-section" id="step8">
+            <div class="step-header">
+                <div class="step-number">💻</div>
+                <div>SQL-Umsetzung</div>
+            </div>
+            
+            <div class="explanation-box">
+                <h3>🛠️ Von der Theorie zur Praxis</h3>
+                <p>Jetzt setzen wir unser normalisiertes Schema in SQL um!</p>
+            </div>
+            
+            <h3>📝 SQL-Schema (3NF):</h3>
+            
+            <div class="sql-code">-- Tabelle 1: Abteilungen
+CREATE TABLE Abteilungen (
+    Abt_Nr INT PRIMARY KEY,
+    Abt_Name VARCHAR(50) NOT NULL
+);
+
+-- Tabelle 2: Personal
+CREATE TABLE Personal (
+    P_Nr INT PRIMARY KEY,
+    P_Name VARCHAR(50) NOT NULL,
+    Abt_Nr INT NOT NULL,
+    FOREIGN KEY (Abt_Nr) REFERENCES Abteilungen(Abt_Nr)
+);
+
+-- Tabelle 3: Projekte
+CREATE TABLE Projekte (
+    Pj_Nr VARCHAR(10) PRIMARY KEY,
+    Pj_Name VARCHAR(50) NOT NULL
+);
+
+-- Tabelle 4: Personal-Projekt-Zuordnung
+CREATE TABLE Personal_Projekte (
+    P_Nr INT,
+    Pj_Nr VARCHAR(10),
+    Pj_Std INT NOT NULL,
+    PRIMARY KEY (P_Nr, Pj_Nr),
+    FOREIGN KEY (P_Nr) REFERENCES Personal(P_Nr),
+    FOREIGN KEY (Pj_Nr) REFERENCES Projekte(Pj_Nr)
+);</div>
+            
+            <h3>📊 Beispiel-Abfrage (Original-Ansicht wiederherstellen):</h3>
+            
+            <div class="sql-code">SELECT 
+    p.P_Name AS Mitarbeiter,
+    a.Abt_Name AS Abteilung,
+    pr.Pj_Name AS Projekt,
+    pp.Pj_Std AS Stunden
+FROM Personal p
+    JOIN Abteilungen a ON p.Abt_Nr = a.Abt_Nr
+    JOIN Personal_Projekte pp ON p.P_Nr = pp.P_Nr
+    JOIN Projekte pr ON pp.Pj_Nr = pr.Pj_Nr
+ORDER BY p.P_Name, pr.Pj_Name;</div>
+            
+            <div class="explanation-box">
+                <h3>🔗 Wichtige SQL-Konzepte:</h3>
+                <ul>
+                    <li><strong>PRIMARY KEY:</strong> Eindeutiger Identifier</li>
+                    <li><strong>FOREIGN KEY:</strong> Verweis auf andere Tabelle</li>
+                    <li><strong>JOIN:</strong> Verknüpfung der Tabellen für Abfragen</li>
+                    <li><strong>NOT NULL:</strong> Wert muss immer vorhanden sein</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Schritt 9: Zusammenfassung -->
+        <div class="training-section" id="step9">
+            <div class="step-header">
+                <div class="step-number">🏆</div>
+                <div>Zusammenfassung & Erfolg</div>
+            </div>
+            
+            <div class="success-box">
+                <h3>🎉 Normalisierung erfolgreich abgeschlossen!</h3>
+                <p>Sie haben erfolgreich eine Tabelle von 0NF bis 3NF normalisiert!</p>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vorher</th>
+                            <th>Nachher</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="problem-highlight">
+                                <strong>1 Tabelle</strong><br>
+                                • 8 Zeilen<br>
+                                • 7 Spalten<br>
+                                • Viel Redundanz<br>
+                                • Update-Anomalien<br>
+                                • Speicherverschwendung
+                            </td>
+                            <td class="solution-highlight">
+                                <strong>4 Tabellen (3NF)</strong><br>
+                                • Abteilungen: 2 Zeilen<br>
+                                • Personal: 4 Zeilen<br>
+                                • Projekte: 3 Zeilen<br>
+                                • Personal_Projekte: 8 Zeilen<br>
+                                • Keine Redundanz<br>
+                                • Konsistente Daten
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="explanation-box">
+                <h3>✅ Was Sie gelernt haben:</h3>
+                <ul>
+                    <li><strong>1NF:</strong> Atomare Werte und eindeutige Zeilen</li>
+                    <li><strong>2NF:</strong> Elimination partieller Abhängigkeiten</li>
+                    <li><strong>3NF:</strong> Elimination transitiver Abhängigkeiten</li>
+                    <li><strong>Primärschlüssel:</strong> Eindeutige Identifikation</li>
+                    <li><strong>Funktionale Abhängigkeiten:</strong> Datenbeziehungen verstehen</li>
+                    <li><strong>SQL-Umsetzung:</strong> Von der Theorie zur Praxis</li>
+                </ul>
+            </div>
+            
+            <div class="definition-box">
+                <h3>🎯 Vorteile der erreichten 3NF:</h3>
+                <ul>
+                    <li><strong>Keine Redundanz:</strong> Jede Information nur einmal gespeichert</li>
+                    <li><strong>Konsistenz:</strong> Ein Wert, eine Änderungsstelle</li>
+                    <li><strong>Flexibilität:</strong> Einfache Erweiterungen möglich</li>
+                    <li><strong>Integrität:</strong> Daten bleiben konsistent</li>
+                    <li><strong>Wartbarkeit:</strong> Änderungen sind sicher und effizient</li>
+                </ul>
+            </div>
+            
+            <div class="explanation-box">
+                <h3>⚖️ Nachteile (zu beachten):</h3>
+                <ul>
+                    <li><strong>Komplexere Abfragen:</strong> Mehr JOINs erforderlich</li>
+                    <li><strong>Performance:</strong> Eventuell langsamere Lesezugriffe</li>
+                    <li><strong>Lernkurve:</strong> Erfordert Verständnis der Normalisierung</li>
+                </ul>
+                <p><strong>Fazit:</strong> Für die meisten transaktionalen Systeme überwiegen die Vorteile deutlich!</p>
+            </div>
+            
+            <div class="interactive-element">
+                <h3>🎓 Herzlichen Glückwunsch!</h3>
+                <p>Sie haben die Grundlagen der Datenbank-Normalisierung erfolgreich gemeistert!</p>
+                <button class="nav-button" onclick="restartTraining()">🔄 Schulung wiederholen</button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-button" id="prevBtn" onclick="changeStep(-1)" disabled>⬅️ Zurück</button>
+            <span id="stepIndicator" style="color: white; margin: 0 20px; font-size: 1.1rem;">Schritt 1 von 10</span>
+            <button class="nav-button" id="nextBtn" onclick="changeStep(1)">Weiter ➡️</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 10;
+        
+        function updateDisplay() {
+            // Hide all sections
+            document.querySelectorAll('.training-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show current section
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            
+            // Update navigation
+            document.getElementById('prevBtn').disabled = currentStep === 0;
+            document.getElementById('nextBtn').disabled = currentStep === totalSteps - 1;
+            
+            // Update step indicator
+            document.getElementById('stepIndicator').textContent = `Schritt ${currentStep + 1} von ${totalSteps}`;
+            
+            // Update progress bar
+            const progress = ((currentStep + 1) / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            
+            // Change next button text on last step
+            if (currentStep === totalSteps - 1) {
+                document.getElementById('nextBtn').textContent = '🎉 Fertig!';
+                document.getElementById('nextBtn').onclick = () => alert('🎓 Schulung abgeschlossen! Sie können jetzt mit "🔄 Zurück" zur Wiederholung oder zum Schließen des Fensters.');
+            } else {
+                document.getElementById('nextBtn').textContent = 'Weiter ➡️';
+                document.getElementById('nextBtn').onclick = () => changeStep(1);
+            }
+        }
+        
+        function changeStep(direction) {
+            const newStep = currentStep + direction;
+            if (newStep >= 0 && newStep < totalSteps) {
+                currentStep = newStep;
+                updateDisplay();
+            }
+        }
+        
+        function selectQuiz(element, isCorrect) {
+            // Remove previous selections
+            element.parentNode.querySelectorAll('.quiz-option').forEach(option => {
+                option.classList.remove('correct', 'wrong');
+            });
+            
+            // Mark selection
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.innerHTML += ' ✅';
+            } else {
+                element.classList.add('wrong');
+                element.innerHTML += ' ❌';
+            }
+        }
+        
+        function restartTraining() {
+            currentStep = 0;
+            updateDisplay();
+            
+            // Reset all quiz selections
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.classList.remove('correct', 'wrong');
+                option.innerHTML = option.innerHTML.replace(' ✅', '').replace(' ❌', '');
+            });
+        }
+        
+        // Initialize display
+        updateDisplay();
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') changeStep(-1);
+            if (e.key === 'ArrowRight') changeStep(1);
+            if (e.key === 'Home') { currentStep = 0; updateDisplay(); }
+            if (e.key === 'End') { currentStep = totalSteps - 1; updateDisplay(); }
+        });
+    </script>
+</body>
+</html>
