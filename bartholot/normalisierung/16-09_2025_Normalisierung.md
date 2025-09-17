@@ -4,3 +4,5 @@
 
 # UE_01
 - Dozentenübung: Aus Chen-Notation ein Datenbankshema erstellen
+
+# UE_02 Prüfungsbeispiel
