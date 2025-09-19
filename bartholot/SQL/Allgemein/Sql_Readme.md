@@ -56,11 +56,21 @@ Es gibt noch ein paar mehr Joinarten jedoch werden diese nicht geprüft.
 
 # Structured Query Language
 DML -> Data Manipulation Language
-- INSERT
-- DELETE
-- UPDATE
+- INSERT -> einfügen eines oder mehrerer Tupel
+- DELETE -> Löschen eines o. m. Tupel
+- UPDATE -> Änderung innerhalb eines o. m. Tupel
 
 DCL -> Data Control Language
-- GRANT -> Recht ... TODO folie weg
+- GRANT -> Recht erteilen an einer Tabelle oder DB
+- REVOKE -> Recht entfernen
 
-TODO...
+DDL -> DataDefinitionLanguage
+- CREATE -> erstellt Datenbanken und Tabellen
+- DROP -> Löscht DB's und Tabellen
+- ALTER -> ändert DB'S und Tabellen (Foreign Key)
+
+DQL -> DataQueryLanguage
+- SELECT -> Aufruf eines oder mehrerer Tupel (Datensatz auch Zeile genannt)
+- SHOW -> zeigt die Definition von DB's und Tabellen an
+- HELP -> Ruft die Hilfe auf
+
