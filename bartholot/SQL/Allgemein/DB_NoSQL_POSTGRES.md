@@ -1,30 +1,24 @@
-# TODO: SQL Übungen
-
-TODO: Bekomme die Aufgabe nnicht aus der Presi des Dozenten, Screenshots etc.
-TODO: SQL Aufgaben suchen und üben ggf. ki generierte Aufgaben
-
-
-Aufgabe d: Geben Sie alle SQL-Anweisungen an, welche notwendig sind, um einen neuen Nutzer: "Maier" mit dem Passwort: "5jk2T?" zu erstellen und diesem die Leserechte an der Tabelle: Objekt geben.
-````SQL
-CREATE USER 'Maier' IDENTIFIED BY '5jk2T?';
-GRANT SELECT ON Objekt TO 'Maier';
-````
-
-# SQL - Fragen und Antworten
+# NoSQL - Fragen und Antworten
 Was sind NoSQL-Datenbanken?
 
 - NoSQL-Datenbanken sind nicht-relationale Datenbanken, die felexiblere Datenstrukturen als traditionelle SQL-Datenbanken ermöglichen. Der Begriff steht für: **"Not only SQL"** und beschreibt Systeme, die große Datenmengen effizient verarbeiten können.
 
 Grundaufbau von MongoDB
 - MongoDB ist eine dokumentorietnierte NoSQL-Datenbank mit folgender Hierachie:
-    - Database (Datenbank)
-    - Collection
-    - Dokument
-    - TODO...
+    - Database (Datenbank) - oberste Ebene enthält collections
+    - Collection - enthalten documents
+    - Document - enthalten fields
+    - Field - Datenfeld
 Kernfunktionen von MongoDB
-- Schemafelxibilität
-- Horizontale Skalierung
-- TODO....
+
+- Schemaflexibilität: Dokumente in derselben Collection können unterschiedliche Strukturen haben. Dies ermöglicht agile Entwicklung und einfache Anpassungen.
+
+- Horizontale Skalierung: MongoDB unterstützt Sharding, wodurch Daten auf mehrere Server verteilt werden können.
+
+- Replikation: Master-Slave-Architektur für Hochverfügbarkeit und Datensicherheit.
+
+- Indexierung: Unterstützt verschiedene Indextypen für optimierte Abfrageperformance.
+
 
 Vorteile von NoSQL-Datenbanken gegnüber relationalen Datenbanken
 - Felixibilität: Keine starren Schemavorgaben, einfache Strukturänderung möglich
@@ -33,10 +27,45 @@ Vorteile von NoSQL-Datenbanken gegnüber relationalen Datenbanken
 - Entwicklerfreundlichkeit: Objektorientierte Datenstrukturen passen gut zu modernen Programmiersparachen
 
 Nachteile und Grenzen von NoSQL-Datenbanken
-- ACID-Eigenschaften: Eingeschränkte Transaktionsunterstützung
-- Komplexe Abfragen: Joins und komplexere ... TODO
-- Datenkonsistenz
-- Speicherverbrauch
+- ACID-Eigenschaften: Eingeschränkte Transaktionsunterstützung im Vergleich zu SQL
+- Komplexe Abfragen: Joins und komplexere relationale Abfragen sind schwieriger Umzusetzen
+- Datenkonsistenz: Kann in bestimmten Szenarien problematisch sein
+- Speicherverbrauch: BSON-Format kann speicherintensiver sein als normalisierte realtionale Strukturen
+
+Praktische Anwendungsbeispiele von NoSQL-Datenbanksystemen
+
+- E-Commerce-Plattform:
+    - Produktkataloge mit unterschiedlichen Attributen (Bücher haben ISBN, Kleidung hat Größen)
+    - Kundenprofile mit variablen Informationen
+    - Warenkörbe mit dynamischen Inhalten
+
+- Content Management System:
+    - Blog-Artikel mit unterschiedlichen Medientypen
+    - Benutzergenerierte Inhalte
+    - Mehrsprachige Inhalte
+
+- Social Media Anwendungen:
+    - Benutzerprofile mit flexiblen Informationen
+    - Posts, Kommentare und Likes
+    - Echtzeitfeeds und Benachrichtigungen
+
+- IoT-Datensammlung:
+    - Sensordaten von verschiedenen Gerätetypen
+    - Zeitreihendaten mit variablen Messparametern
+    - Gerätestatus und Konfigurationsdaten
+
+# NoSQL: Prüfungsrelevante Abgrenzung zu SQL
+
+Für IHK-Prüfungen wichtig ist das Verständnis, wann NoSQL-Datenbanken wie MongoDB eingesetzt werden sollten:
+- bei unstrukturierten Daten
+- hohen Skalierungsanforderungen
+- flexiblen Datenmodellen. 
+
+SQL-Datenbanken bleiben die bessere Wahl für
+- strukturierte Daten mit komplexen Beziehungen
+- strikten Konsistenzanforderungen
+- bestmögliche Redundanzfreiheit
+
 
 # PostgreSQL
 Was macht PostgreSQL besonders?

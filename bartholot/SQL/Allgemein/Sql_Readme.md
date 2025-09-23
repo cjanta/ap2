@@ -74,3 +74,12 @@ DQL -> DataQueryLanguage
 - SHOW -> zeigt die Definition von DB's und Tabellen an
 - HELP -> Ruft die Hilfe auf
 
+# TODO: SQL Übungen
+
+TODO: SQL Aufgaben suchen und üben ggf. ki generierte Aufgaben
+
+Aufgabe d: Geben Sie alle SQL-Anweisungen an, welche notwendig sind, um einen neuen Nutzer: "Maier" mit dem Passwort: "5jk2T?" zu erstellen und diesem die Leserechte an der Tabelle: Objekt geben.
+````SQL
+CREATE USER 'Maier' IDENTIFIED BY '5jk2T?';
+GRANT SELECT ON Objekt TO 'Maier';
+````
