@@ -1,0 +1,3137 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 Algorithmus-Visualisierer Pro 2.0 - Erweitertes Lerntool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --secondary: #06b6d4;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f1f5f9;
+            --border: #e2e8f0;
+            --success: #22c55e;
+            --purple-light: #f3e8ff;
+            --cyan-light: #cffafe;
+            --bg-gradient: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+        }
+
+        /* Dark Mode Variables */
+        [data-theme="dark"] {
+            --dark: #f1f5f9;
+            --light: #1e293b;
+            --border: #334155;
+            --purple-light: #4c1d95;
+            --cyan-light: #164e63;
+            --bg-gradient: linear-gradient(135deg, #4c1d95 0%, #164e63 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        [data-theme="dark"] .header {
+            background: rgba(30, 41, 59, 0.95);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg);
+            background: #7c3aed;
+        }
+
+        /* View Mode Toggle */
+        .view-mode-toggle {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .view-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .view-btn {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .view-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 2rem;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+
+        [data-theme="dark"] .control-panel {
+            background: #1e293b;
+        }
+
+        .algorithm-selector {
+            margin-bottom: 2rem;
+        }
+
+        .algorithm-selector h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .algorithm-buttons {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .algo-btn {
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .algo-btn {
+            background: #334155;
+            color: #f1f5f9;
+        }
+
+        .algo-btn:hover {
+            border-color: var(--primary);
+            background: var(--purple-light);
+            transform: translateX(5px);
+        }
+
+        .algo-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .algo-btn.active::after {
+            content: '✓';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+        }
+
+        .algo-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .algo-difficulty {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Array Input */
+        .array-input {
+            margin-bottom: 2rem;
+        }
+
+        .array-input h4 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .array-field {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            background: white;
+            color: var(--dark);
+        }
+
+        [data-theme="dark"] .array-field {
+            background: #334155;
+            color: #f1f5f9;
+        }
+
+        .array-field:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .size-input {
+            width: 100px;
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .preset-btn {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--light);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .preset-btn {
+            background: #334155;
+            color: #f1f5f9;
+        }
+
+        .preset-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Control Buttons */
+        .controls {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #0891b2;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Speed Control */
+        .speed-control {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 10px;
+        }
+
+        [data-theme="dark"] .speed-control {
+            background: #334155;
+        }
+
+        .speed-control h4 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .speed-slider {
+            width: 100%;
+            margin: 1rem 0;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 5px;
+            background: var(--border);
+            outline: none;
+        }
+
+        .speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .speed-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .speed-display {
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        /* Sound Toggle */
+        .sound-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: var(--light);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        [data-theme="dark"] .sound-toggle {
+            background: #334155;
+        }
+
+        .sound-toggle input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Visualization Area */
+        .visualization-area {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            min-height: 600px;
+        }
+
+        [data-theme="dark"] .visualization-area {
+            background: #1e293b;
+        }
+
+        .viz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .viz-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .step-info {
+            background: var(--light);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--dark);
+            animation: slideIn 0.3s ease;
+        }
+
+        [data-theme="dark"] .step-info {
+            background: #334155;
+            color: #f1f5f9;
+        }
+
+        /* Array Visualization - Box View */
+        .array-container {
+            display: flex;
+            justify-content: center;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            min-height: 100px;
+        }
+
+        .array-element {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            background: white;
+            transition: all 0.5s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        [data-theme="dark"] .array-element {
+            background: #334155;
+            color: #f1f5f9;
+        }
+
+        .array-element:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .array-element.comparing {
+            border-color: var(--warning);
+            background: #fef3c7;
+            transform: scale(1.1);
+            animation: pulse 0.5s ease infinite;
+        }
+
+        .array-element.swapping {
+            border-color: var(--danger);
+            background: #fecaca;
+            transform: scale(1.2) rotate(5deg);
+            animation: shake 0.5s ease;
+        }
+
+        .array-element.sorted {
+            border-color: var(--success);
+            background: #dcfce7;
+            animation: bounce 0.5s ease;
+        }
+
+        .array-element.pivot {
+            border-color: var(--primary);
+            background: var(--purple-light);
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        }
+
+        .array-element.selected {
+            border-color: var(--secondary);
+            background: var(--cyan-light);
+        }
+
+        .element-index {
+            position: absolute;
+            top: -25px;
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+
+        /* Bar Chart View */
+        .bar-chart-container {
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            height: 400px;
+            margin: 3rem 0;
+            gap: 2px;
+            padding: 0 2rem;
+        }
+
+        .bar-chart-container.active {
+            display: flex;
+        }
+
+        .bar {
+            flex: 1;
+            background: var(--primary);
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s ease;
+            position: relative;
+            min-width: 20px;
+            max-width: 60px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            padding-bottom: 5px;
+        }
+
+        .bar.comparing {
+            background: var(--warning);
+            animation: pulse 0.5s ease infinite;
+        }
+
+        .bar.swapping {
+            background: var(--danger);
+            animation: shake 0.5s ease;
+        }
+
+        .bar.sorted {
+            background: var(--success);
+            animation: bounce 0.5s ease;
+        }
+
+        .bar.pivot {
+            background: var(--primary);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        }
+
+        /* Pointer Visualization */
+        .pointers {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+            gap: 0.5rem;
+        }
+
+        .pointer {
+            width: 60px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .pointer.active {
+            opacity: 1;
+            animation: slideUp 0.3s ease;
+        }
+
+        /* Code Display */
+        .code-display {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .code-title {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .language-dropdown {
+            background: #334155;
+            color: #e2e8f0;
+            border: 1px solid #475569;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .language-dropdown:hover {
+            background: #475569;
+        }
+
+        .copy-code-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .copy-code-btn:hover {
+            background: #7c3aed;
+        }
+
+        .code-line {
+            padding: 0.25rem 0;
+            transition: background-color 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .code-line.highlight {
+            background: rgba(139, 92, 246, 0.2);
+            border-left: 3px solid var(--primary);
+            padding-left: 1rem;
+            margin-left: -0.5rem;
+        }
+
+        .line-number {
+            display: inline-block;
+            width: 3rem;
+            text-align: right;
+            padding-right: 1rem;
+            color: #475569;
+            user-select: none;
+        }
+
+        .code-keyword {
+            color: #c084fc;
+        }
+
+        .code-function {
+            color: #60a5fa;
+        }
+
+        .code-comment {
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        .code-string {
+            color: #86efac;
+        }
+
+        .code-number {
+            color: #fbbf24;
+        }
+
+        .code-type {
+            color: #fca5a5;
+        }
+
+        .code-variable {
+            color: #fdba74;
+        }
+
+        .code-operator {
+            color: #e2e8f0;
+        }
+
+        .code-bracket {
+            color: #f472b6;
+        }
+
+        /* Step Explanation */
+        .step-explanation {
+            background: var(--light);
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        [data-theme="dark"] .step-explanation {
+            background: #334155;
+        }
+
+        .step-explanation.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .step-explanation h5 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Statistics Panel */
+        .stats-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 2rem;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+
+        [data-theme="dark"] .stats-panel {
+            background: #1e293b;
+        }
+
+        .stats-header {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: var(--light);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .stat-item {
+            background: #334155;
+        }
+
+        .stat-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-label {
+            color: var(--dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-value {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Algorithm Comparison */
+        .comparison-section {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border);
+        }
+
+        .comparison-header {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .comparison-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .comparison-btn:hover {
+            background: #0891b2;
+            transform: translateY(-2px);
+        }
+
+        /* Algorithm Info */
+        .algo-info {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--primary);
+            animation: slideIn 0.5s ease;
+        }
+
+        [data-theme="dark"] .algo-info {
+            background: #334155;
+        }
+
+        .algo-info h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .complexity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .complexity-table th,
+        .complexity-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .complexity-table th {
+            background: var(--purple-light);
+            font-weight: 600;
+            color: white;
+        }
+
+        [data-theme="dark"] .complexity-table th {
+            background: #4c1d95;
+        }
+
+        /* Learning Path */
+        .learning-path {
+            background: var(--cyan-light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        [data-theme="dark"] .learning-path {
+            background: #164e63;
+        }
+
+        .path-header {
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .path-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        [data-theme="dark"] .path-step {
+            background: #334155;
+        }
+
+        .path-step:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .path-step.completed {
+            background: var(--purple-light);
+            border-left: 4px solid var(--success);
+        }
+
+        .path-step.completed::after {
+            content: '✓';
+            position: absolute;
+            right: 1rem;
+            color: var(--success);
+            font-size: 1.2rem;
+        }
+
+        .path-step.current {
+            background: var(--purple-light);
+            border-left: 4px solid var(--primary);
+            animation: pulse 2s ease infinite;
+        }
+
+        .step-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .step-text {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        /* History Section */
+        .history-section {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        [data-theme="dark"] .history-section {
+            background: #334155;
+        }
+
+        .history-header {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+
+        .clear-history-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .clear-history-btn:hover {
+            background: #dc2626;
+        }
+
+        .history-item {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        [data-theme="dark"] .history-item {
+            background: #1e293b;
+        }
+
+        .history-algo {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .history-stats {
+            color: #64748b;
+            font-size: 0.75rem;
+        }
+
+        /* Quiz Modal */
+        .quiz-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .quiz-modal.active {
+            display: flex;
+        }
+
+        .quiz-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        [data-theme="dark"] .quiz-content {
+            background: #1e293b;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .quiz-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .close-quiz {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.3s ease;
+        }
+
+        .close-quiz:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .quiz-question {
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-question h4 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .quiz-option {
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        [data-theme="dark"] .quiz-option {
+            background: #334155;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary);
+            background: var(--purple-light);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: #dcfce7;
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--danger);
+            background: #fecaca;
+        }
+
+        .quiz-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-submit:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+        }
+
+        .quiz-result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        [data-theme="dark"] .quiz-result {
+            background: #334155;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .control-panel,
+            .stats-panel {
+                position: static;
+                max-height: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .array-element {
+                width: 45px;
+                height: 45px;
+                font-size: 0.9rem;
+            }
+
+            .preset-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .bar {
+                min-width: 15px;
+                font-size: 0.7rem;
+            }
+
+            .code-display {
+                font-size: 0.75rem;
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .array-element {
+                width: 35px;
+                height: 35px;
+                font-size: 0.8rem;
+            }
+
+            .view-mode-toggle {
+                flex-direction: column;
+            }
+
+            .view-btn {
+                width: 100%;
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% { 
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes slideUp {
+            from { 
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Loader */
+        .loader {
+            border: 3px solid var(--light);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Tooltips */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            z-index: 100;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tooltip:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--dark);
+            z-index: 100;
+            animation: fadeIn 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <button class="theme-toggle" id="themeToggle" title="Theme wechseln">
+                <i class="fas fa-moon"></i>
+            </button>
+            <h1>
+                <i class="fas fa-brain"></i>
+                Algorithmus-Visualisierer Pro 2.0
+            </h1>
+            <p>Verstehe Sortieralgorithmen durch interaktive Visualisierung und erweiterte Lernfunktionen</p>
+            <div class="view-mode-toggle">
+                <button class="view-btn active" data-view="box">
+                    <i class="fas fa-th"></i> Box-Ansicht
+                </button>
+                <button class="view-btn" data-view="bar">
+                    <i class="fas fa-chart-bar"></i> Balkendiagramm
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <!-- Algorithm Selector -->
+                <div class="algorithm-selector">
+                    <h3>
+                        <i class="fas fa-cogs"></i>
+                        Algorithmus wählen
+                    </h3>
+                    <div class="algorithm-buttons">
+                        <button class="algo-btn active" data-algo="bubble">
+                            <div class="algo-title">Bubble Sort</div>
+                            <div class="algo-difficulty">Einfach • O(n²)</div>
+                        </button>
+                        <button class="algo-btn" data-algo="selection">
+                            <div class="algo-title">Selection Sort</div>
+                            <div class="algo-difficulty">Einfach • O(n²)</div>
+                        </button>
+                        <button class="algo-btn" data-algo="insertion">
+                            <div class="algo-title">Insertion Sort</div>
+                            <div class="algo-difficulty">Mittel • O(n²)</div>
+                        </button>
+                        <button class="algo-btn" data-algo="merge">
+                            <div class="algo-title">Merge Sort</div>
+                            <div class="algo-difficulty">Schwer • O(n log n)</div>
+                        </button>
+                        <button class="algo-btn" data-algo="quick">
+                            <div class="algo-title">Quick Sort</div>
+                            <div class="algo-difficulty">Schwer • O(n log n)</div>
+                        </button>
+                        <button class="algo-btn" data-algo="heap">
+                            <div class="algo-title">Heap Sort</div>
+                            <div class="algo-difficulty">Schwer • O(n log n)</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Array Input -->
+                <div class="array-input">
+                    <h4>
+                        <i class="fas fa-list"></i>
+                        Array eingeben
+                    </h4>
+                    <div class="input-row">
+                        <input 
+                            type="text" 
+                            id="arrayInput" 
+                            class="array-field" 
+                            placeholder="5,3,8,1,9,2"
+                            value="5,3,8,1,9,2"
+                        >
+                        <input 
+                            type="number" 
+                            id="arraySizeInput" 
+                            class="array-field size-input" 
+                            placeholder="Größe"
+                            min="3"
+                            max="50"
+                            value="10"
+                        >
+                    </div>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" onclick="loadPreset('random')">
+                            <i class="fas fa-random"></i> Zufällig
+                        </button>
+                        <button class="preset-btn" onclick="loadPreset('reverse')">
+                            <i class="fas fa-sort-amount-down"></i> Umgekehrt
+                        </button>
+                        <button class="preset-btn" onclick="loadPreset('nearly')">
+                            <i class="fas fa-sort-amount-up"></i> Fast sortiert
+                        </button>
+                        <button class="preset-btn" onclick="loadPreset('duplicate')">
+                            <i class="fas fa-copy"></i> Duplikate
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="controls">
+                    <button id="startBtn" class="btn btn-primary tooltip" data-tooltip="Sortierung starten">
+                        <i class="fas fa-play"></i>
+                        Starten
+                    </button>
+                    <button id="pauseBtn" class="btn btn-secondary tooltip" data-tooltip="Pausieren" disabled>
+                        <i class="fas fa-pause"></i>
+                        Pausieren
+                    </button>
+                    <button id="stepBtn" class="btn btn-secondary tooltip" data-tooltip="Schritt für Schritt">
+                        <i class="fas fa-step-forward"></i>
+                        Einzelschritt
+                    </button>
+                    <button id="resetBtn" class="btn btn-danger tooltip" data-tooltip="Zurücksetzen">
+                        <i class="fas fa-redo"></i>
+                        Zurücksetzen
+                    </button>
+                    <button id="quizBtn" class="btn btn-warning tooltip" data-tooltip="Wissenstest starten">
+                        <i class="fas fa-question-circle"></i>
+                        Quiz
+                    </button>
+                </div>
+
+                <!-- Speed Control -->
+                <div class="speed-control">
+                    <h4>
+                        <i class="fas fa-tachometer-alt"></i>
+                        Geschwindigkeit
+                    </h4>
+                    <input 
+                        type="range" 
+                        id="speedSlider" 
+                        class="speed-slider" 
+                        min="1" 
+                        max="10" 
+                        value="5"
+                    >
+                    <div class="speed-display" id="speedDisplay">5x</div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #64748b;">
+                        <span>Langsam</span>
+                        <span>Schnell</span>
+                    </div>
+                </div>
+
+                <!-- Sound Toggle -->
+                <div class="sound-toggle">
+                    <input type="checkbox" id="soundToggle" checked>
+                    <label for="soundToggle">
+                        <i class="fas fa-volume-up"></i> Sound-Effekte aktiviert
+                    </label>
+                </div>
+            </div>
+
+            <!-- Visualization Area -->
+            <div class="visualization-area">
+                <div class="viz-header">
+                    <div class="viz-title" id="vizTitle">Bubble Sort</div>
+                    <div class="step-info" id="stepInfo">Bereit zum Start</div>
+                </div>
+
+                <!-- Algorithm Info -->
+                <div class="algo-info" id="algoInfo">
+                    <h4>
+                        <i class="fas fa-info-circle"></i>
+                        Bubble Sort - Algorithmus-Info
+                    </h4>
+                    <p>Bubble Sort vergleicht benachbarte Elemente und tauscht sie, wenn sie in der falschen Reihenfolge stehen. Dieser Prozess wird wiederholt, bis das Array sortiert ist.</p>
+                    
+                    <table class="complexity-table">
+                        <tr>
+                            <th>Best Case</th>
+                            <th>Average Case</th>
+                            <th>Worst Case</th>
+                            <th>Space</th>
+                            <th>Stabil</th>
+                        </tr>
+                        <tr>
+                            <td>O(n)</td>
+                            <td>O(n²)</td>
+                            <td>O(n²)</td>
+                            <td>O(1)</td>
+                            <td>Ja</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Array Visualization -->
+                <div class="array-container" id="arrayContainer">
+                    <!-- Elements werden dynamisch generiert -->
+                </div>
+
+                <!-- Bar Chart View -->
+                <div class="bar-chart-container" id="barChartContainer">
+                    <!-- Bars werden dynamisch generiert -->
+                </div>
+
+                <!-- Pointers -->
+                <div class="pointers" id="pointers">
+                    <!-- Pointer werden dynamisch generiert -->
+                </div>
+
+                <!-- Step Explanation -->
+                <div class="step-explanation" id="stepExplanation">
+                    <h5>
+                        <i class="fas fa-lightbulb"></i>
+                        Schritt-Erklärung
+                    </h5>
+                    <p id="stepExplanationText">Erklärung des aktuellen Schritts wird hier angezeigt...</p>
+                </div>
+
+                <!-- Code Display -->
+                <div class="code-display" id="codeDisplay">
+                    <div class="code-header">
+                        <span class="code-title" id="codeTitle">JavaScript Implementation</span>
+                        <div class="language-selector">
+                            <select class="language-dropdown" id="languageSelect">
+                                <option value="javascript">JavaScript</option>
+                                <option value="python">Python</option>
+                                <option value="java">Java</option>
+                                <option value="cpp">C++</option>
+                                <option value="csharp">C#</option>
+                                <option value="go">Go</option>
+                                <option value="rust">Rust</option>
+                                <option value="typescript">TypeScript</option>
+                                <option value="swift">Swift</option>
+                                <option value="kotlin">Kotlin</option>
+                                <option value="ruby">Ruby</option>
+                            </select>
+                            <button class="copy-code-btn" onclick="copyCode()">
+                                <i class="fas fa-copy"></i> Kopieren
+                            </button>
+                        </div>
+                    </div>
+                    <pre id="codeContent">
+                        <!-- Code wird dynamisch geladen -->
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Statistics Panel -->
+            <div class="stats-panel">
+                <div class="stats-header">
+                    <i class="fas fa-chart-bar"></i>
+                    Live-Statistiken
+                </div>
+
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <i class="fas fa-balance-scale"></i>
+                        Vergleiche:
+                    </span>
+                    <span class="stat-value" id="comparisons">0</span>
+                </div>
+
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <i class="fas fa-exchange-alt"></i>
+                        Tauschvorgänge:
+                    </span>
+                    <span class="stat-value" id="swaps">0</span>
+                </div>
+
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <i class="fas fa-database"></i>
+                        Array-Zugriffe:
+                    </span>
+                    <span class="stat-value" id="accesses">0</span>
+                </div>
+
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <i class="fas fa-clock"></i>
+                        Zeit:
+                    </span>
+                    <span class="stat-value" id="timeElapsed">0.0s</span>
+                </div>
+
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <i class="fas fa-tasks"></i>
+                        Fortschritt:
+                    </span>
+                    <span class="stat-value" id="progress">0%</span>
+                </div>
+
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Geschwindigkeit:
+                    </span>
+                    <span class="stat-value" id="currentSpeed">5x</span>
+                </div>
+
+                <!-- Algorithm Comparison -->
+                <div class="comparison-section">
+                    <div class="comparison-header">
+                        <i class="fas fa-chart-line"></i>
+                        Algorithmus-Vergleich
+                    </div>
+                    <button class="comparison-btn" onclick="openComparison()">
+                        <i class="fas fa-balance-scale"></i>
+                        Algorithmen vergleichen
+                    </button>
+                </div>
+
+                <!-- Learning Path -->
+                <div class="learning-path">
+                    <h4 class="path-header">
+                        <i class="fas fa-route"></i>
+                        Lernpfad & Fortschritt
+                    </h4>
+                    <div class="path-step completed" onclick="selectAlgorithm('bubble')">
+                        <div class="step-icon">1</div>
+                        <div class="step-text">Bubble Sort verstehen</div>
+                    </div>
+                    <div class="path-step" onclick="selectAlgorithm('selection')">
+                        <div class="step-icon">2</div>
+                        <div class="step-text">Selection Sort lernen</div>
+                    </div>
+                    <div class="path-step" onclick="selectAlgorithm('insertion')">
+                        <div class="step-icon">3</div>
+                        <div class="step-text">Insertion Sort meistern</div>
+                    </div>
+                    <div class="path-step" onclick="selectAlgorithm('merge')">
+                        <div class="step-icon">4</div>
+                        <div class="step-text">Merge Sort erkunden</div>
+                    </div>
+                    <div class="path-step" onclick="selectAlgorithm('quick')">
+                        <div class="step-icon">5</div>
+                        <div class="step-text">Quick Sort beherrschen</div>
+                    </div>
+                    <div class="path-step" onclick="selectAlgorithm('heap')">
+                        <div class="step-icon">6</div>
+                        <div class="step-text">Heap Sort perfektionieren</div>
+                    </div>
+                </div>
+
+                <!-- History Section -->
+                <div class="history-section">
+                    <div class="history-header">
+                        <span>
+                            <i class="fas fa-history"></i>
+                            Verlauf
+                        </span>
+                        <button class="clear-history-btn" onclick="clearHistory()">
+                            <i class="fas fa-trash"></i> Löschen
+                        </button>
+                    </div>
+                    <div id="historyList">
+                        <!-- History items werden dynamisch generiert -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div class="quiz-modal" id="quizModal">
+        <div class="quiz-content">
+            <div class="quiz-header">
+                <h3 class="quiz-title">
+                    <i class="fas fa-brain"></i>
+                    Algorithmus-Quiz
+                </h3>
+                <button class="close-quiz" onclick="closeQuiz()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="quiz-question">
+                <h4 id="quizQuestionText">Welcher Algorithmus hat die beste durchschnittliche Zeitkomplexität?</h4>
+                <div class="quiz-options" id="quizOptions">
+                    <!-- Options werden dynamisch generiert -->
+                </div>
+            </div>
+
+            <button class="quiz-submit" onclick="submitQuizAnswer()">
+                Antwort überprüfen
+            </button>
+
+            <div class="quiz-result" id="quizResult" style="display: none;">
+                <!-- Result wird dynamisch angezeigt -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global State
+        let currentAlgorithm = 'bubble';
+        let currentLanguage = 'javascript';
+        let array = [5, 3, 8, 1, 9, 2];
+        let originalArray = [...array];
+        let isRunning = false;
+        let isPaused = false;
+        let stepMode = false;
+        let speed = 5;
+        let currentStep = 0;
+        let totalSteps = 0;
+        let animationId;
+        let startTime;
+        let soundEnabled = true;
+        let currentView = 'box';
+        let theme = 'light';
+        let sortingHistory = [];
+
+        // Audio Context für Sound-Effekte
+        let audioContext;
+        let oscillator;
+
+        // Statistics
+        let stats = {
+            comparisons: 0,
+            swaps: 0,
+            accesses: 0
+        };
+
+        // Algorithm Definitions
+        const algorithms = {
+            bubble: {
+                name: 'Bubble Sort',
+                description: 'Vergleicht benachbarte Elemente und tauscht sie bei falscher Reihenfolge.',
+                complexity: {
+                    best: 'O(n)',
+                    average: 'O(n²)',
+                    worst: 'O(n²)',
+                    space: 'O(1)',
+                    stable: 'Ja'
+                },
+                code: `<span class="code-keyword">function</span> <span class="code-function">bubbleSort</span>(arr) {
+    <span class="code-keyword">const</span> n = arr.length;
+    
+    <span class="code-comment">// Äußere Schleife für jeden Durchgang</span>
+    <span class="code-line" id="line-1"><span class="code-keyword">for</span> (<span class="code-keyword">let</span> i = <span class="code-number">0</span>; i < n - <span class="code-number">1</span>; i++) {</span>
+        <span class="code-keyword">let</span> swapped = <span class="code-keyword">false</span>;
+        
+        <span class="code-comment">// Innere Schleife für Vergleiche</span>
+        <span class="code-line" id="line-2"><span class="code-keyword">for</span> (<span class="code-keyword">let</span> j = <span class="code-number">0</span>; j < n - i - <span class="code-number">1</span>; j++) {</span>
+            <span class="code-comment">// Vergleiche benachbarte Elemente</span>
+            <span class="code-line" id="line-3"><span class="code-keyword">if</span> (arr[j] > arr[j + <span class="code-number">1</span>]) {</span>
+                <span class="code-comment">// Tausche Elemente</span>
+                <span class="code-line" id="line-4">[arr[j], arr[j + <span class="code-number">1</span>]] = [arr[j + <span class="code-number">1</span>], arr[j]];</span>
+                swapped = <span class="code-keyword">true</span>;
+            }
+        }
+        
+        <span class="code-comment">// Optimierung: Früher Abbruch wenn sortiert</span>
+        <span class="code-line" id="line-5"><span class="code-keyword">if</span> (!swapped) <span class="code-keyword">break</span>;</span>
+    }
+    
+    <span class="code-keyword">return</span> arr;
+}`
+            },
+            selection: {
+                name: 'Selection Sort',
+                description: 'Findet das kleinste Element und platziert es an der richtigen Position.',
+                complexity: {
+                    best: 'O(n²)',
+                    average: 'O(n²)',
+                    worst: 'O(n²)',
+                    space: 'O(1)',
+                    stable: 'Nein'
+                },
+                code: `<span class="code-keyword">function</span> <span class="code-function">selectionSort</span>(arr) {
+    <span class="code-keyword">const</span> n = arr.length;
+    
+    <span class="code-line" id="line-1"><span class="code-keyword">for</span> (<span class="code-keyword">let</span> i = <span class="code-number">0</span>; i < n - <span class="code-number">1</span>; i++) {</span>
+        <span class="code-comment">// Finde Index des kleinsten Elements</span>
+        <span class="code-line" id="line-2"><span class="code-keyword">let</span> minIndex = i;</span>
+        
+        <span class="code-line" id="line-3"><span class="code-keyword">for</span> (<span class="code-keyword">let</span> j = i + <span class="code-number">1</span>; j < n; j++) {</span>
+            <span class="code-line" id="line-4"><span class="code-keyword">if</span> (arr[j] < arr[minIndex]) {</span>
+                <span class="code-line" id="line-5">minIndex = j;</span>
+            }
+        }
+        
+        <span class="code-comment">// Tausche mit dem kleinsten Element</span>
+        <span class="code-line" id="line-6"><span class="code-keyword">if</span> (minIndex !== i) {</span>
+            <span class="code-line" id="line-7">[arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];</span>
+        }
+    }
+    
+    <span class="code-keyword">return</span> arr;
+}`
+            },
+            insertion: {
+                name: 'Insertion Sort',
+                description: 'Fügt jedes Element an der richtigen Position in den sortierten Teil ein.',
+                complexity: {
+                    best: 'O(n)',
+                    average: 'O(n²)',
+                    worst: 'O(n²)',
+                    space: 'O(1)',
+                    stable: 'Ja'
+                },
+                code: `<span class="code-keyword">function</span> <span class="code-function">insertionSort</span>(arr) {
+    <span class="code-keyword">const</span> n = arr.length;
+    
+    <span class="code-line" id="line-1"><span class="code-keyword">for</span> (<span class="code-keyword">let</span> i = <span class="code-number">1</span>; i < n; i++) {</span>
+        <span class="code-line" id="line-2"><span class="code-keyword">let</span> key = arr[i];</span>
+        <span class="code-line" id="line-3"><span class="code-keyword">let</span> j = i - <span class="code-number">1</span>;</span>
+        
+        <span class="code-comment">// Verschiebe größere Elemente nach rechts</span>
+        <span class="code-line" id="line-4"><span class="code-keyword">while</span> (j >= <span class="code-number">0</span> && arr[j] > key) {</span>
+            <span class="code-line" id="line-5">arr[j + <span class="code-number">1</span>] = arr[j];</span>
+            <span class="code-line" id="line-6">j--;</span>
+        }
+        
+        <span class="code-comment">// Füge key an der richtigen Position ein</span>
+        <span class="code-line" id="line-7">arr[j + <span class="code-number">1</span>] = key;</span>
+    }
+    
+    <span class="code-keyword">return</span> arr;
+}`
+            },
+            merge: {
+                name: 'Merge Sort',
+                description: 'Teilt das Array rekursiv und fügt die Teile sortiert zusammen.',
+                complexity: {
+                    best: 'O(n log n)',
+                    average: 'O(n log n)',
+                    worst: 'O(n log n)',
+                    space: 'O(n)',
+                    stable: 'Ja'
+                },
+                code: `<span class="code-keyword">function</span> <span class="code-function">mergeSort</span>(arr) {
+    <span class="code-line" id="line-1"><span class="code-keyword">if</span> (arr.length <= <span class="code-number">1</span>) <span class="code-keyword">return</span> arr;</span>
+    
+    <span class="code-comment">// Teile Array in zwei Hälften</span>
+    <span class="code-line" id="line-2"><span class="code-keyword">const</span> mid = Math.floor(arr.length / <span class="code-number">2</span>);</span>
+    <span class="code-line" id="line-3"><span class="code-keyword">const</span> left = mergeSort(arr.slice(<span class="code-number">0</span>, mid));</span>
+    <span class="code-line" id="line-4"><span class="code-keyword">const</span> right = mergeSort(arr.slice(mid));</span>
+    
+    <span class="code-line" id="line-5"><span class="code-keyword">return</span> merge(left, right);</span>
+}
+
+<span class="code-keyword">function</span> <span class="code-function">merge</span>(left, right) {
+    <span class="code-keyword">let</span> result = [];
+    <span class="code-keyword">let</span> i = <span class="code-number">0</span>, j = <span class="code-number">0</span>;
+    
+    <span class="code-comment">// Füge sortierte Arrays zusammen</span>
+    <span class="code-line" id="line-6"><span class="code-keyword">while</span> (i < left.length && j < right.length) {</span>
+        <span class="code-line" id="line-7"><span class="code-keyword">if</span> (left[i] <= right[j]) {</span>
+            result.push(left[i++]);
+        } <span class="code-keyword">else</span> {
+            result.push(right[j++]);
+        }
+    }
+    
+    <span class="code-comment">// Füge restliche Elemente hinzu</span>
+    <span class="code-keyword">return</span> result.concat(left.slice(i)).concat(right.slice(j));
+}`
+            },
+            quick: {
+                name: 'Quick Sort',
+                description: 'Wählt ein Pivot-Element und partitioniert das Array um dieses.',
+                complexity: {
+                    best: 'O(n log n)',
+                    average: 'O(n log n)',
+                    worst: 'O(n²)',
+                    space: 'O(log n)',
+                    stable: 'Nein'
+                },
+                code: `<span class="code-keyword">function</span> <span class="code-function">quickSort</span>(arr, low = <span class="code-number">0</span>, high = arr.length - <span class="code-number">1</span>) {
+    <span class="code-line" id="line-1"><span class="code-keyword">if</span> (low < high) {</span>
+        <span class="code-comment">// Partitioniere Array und erhalte Pivot-Index</span>
+        <span class="code-line" id="line-2"><span class="code-keyword">const</span> pi = partition(arr, low, high);</span>
+        
+        <span class="code-comment">// Sortiere Teilarrays rekursiv</span>
+        <span class="code-line" id="line-3">quickSort(arr, low, pi - <span class="code-number">1</span>);</span>
+        <span class="code-line" id="line-4">quickSort(arr, pi + <span class="code-number">1</span>, high);</span>
+    }
+    <span class="code-keyword">return</span> arr;
+}
+
+<span class="code-keyword">function</span> <span class="code-function">partition</span>(arr, low, high) {
+    <span class="code-comment">// Wähle letztes Element als Pivot</span>
+    <span class="code-line" id="line-5"><span class="code-keyword">const</span> pivot = arr[high];</span>
+    <span class="code-keyword">let</span> i = low - <span class="code-number">1</span>;
+    
+    <span class="code-line" id="line-6"><span class="code-keyword">for</span> (<span class="code-keyword">let</span> j = low; j < high; j++) {</span>
+        <span class="code-line" id="line-7"><span class="code-keyword">if</span> (arr[j] < pivot) {</span>
+            i++;
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+    }
+    
+    [arr[i + <span class="code-number">1</span>], arr[high]] = [arr[high], arr[i + <span class="code-number">1</span>]];
+    <span class="code-keyword">return</span> i + <span class="code-number">1</span>;
+}`
+            },
+            heap: {
+                name: 'Heap Sort',
+                description: 'Baut einen Max-Heap auf und extrahiert sukzessive das größte Element.',
+                complexity: {
+                    best: 'O(n log n)',
+                    average: 'O(n log n)',
+                    worst: 'O(n log n)',
+                    space: 'O(1)',
+                    stable: 'Nein'
+                },
+                code: `<span class="code-keyword">function</span> <span class="code-function">heapSort</span>(arr) {
+    <span class="code-keyword">const</span> n = arr.length;
+    
+    <span class="code-comment">// Baue Max-Heap auf</span>
+    <span class="code-line" id="line-1"><span class="code-keyword">for</span> (<span class="code-keyword">let</span> i = Math.floor(n / <span class="code-number">2</span>) - <span class="code-number">1</span>; i >= <span class="code-number">0</span>; i--) {</span>
+        <span class="code-line" id="line-2">heapify(arr, n, i);</span>
+    }
+    
+    <span class="code-comment">// Extrahiere Elemente aus dem Heap</span>
+    <span class="code-line" id="line-3"><span class="code-keyword">for</span> (<span class="code-keyword">let</span> i = n - <span class="code-number">1</span>; i > <span class="code-number">0</span>; i--) {</span>
+        <span class="code-comment">// Verschiebe aktuelle Wurzel ans Ende</span>
+        <span class="code-line" id="line-4">[arr[<span class="code-number">0</span>], arr[i]] = [arr[i], arr[<span class="code-number">0</span>]];</span>
+        
+        <span class="code-comment">// Heapify reduziertes Heap</span>
+        <span class="code-line" id="line-5">heapify(arr, i, <span class="code-number">0</span>);</span>
+    }
+    
+    <span class="code-keyword">return</span> arr;
+}
+
+<span class="code-keyword">function</span> <span class="code-function">heapify</span>(arr, n, i) {
+    <span class="code-keyword">let</span> largest = i;
+    <span class="code-keyword">const</span> left = <span class="code-number">2</span> * i + <span class="code-number">1</span>;
+    <span class="code-keyword">const</span> right = <span class="code-number">2</span> * i + <span class="code-number">2</span>;
+    
+    <span class="code-line" id="line-6"><span class="code-keyword">if</span> (left < n && arr[left] > arr[largest]) {</span>
+        largest = left;
+    }
+    
+    <span class="code-line" id="line-7"><span class="code-keyword">if</span> (right < n && arr[right] > arr[largest]) {</span>
+        largest = right;
+    }
+    
+    <span class="code-line" id="line-8"><span class="code-keyword">if</span> (largest !== i) {</span>
+        [arr[i], arr[largest]] = [arr[largest], arr[i]];
+        heapify(arr, n, largest);
+    }
+}`
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            initAudioContext();
+            updateArrayVisualization();
+            updateAlgorithmInfo();
+            updateStatistics();
+            loadHistoryFromStorage();
+            loadThemeFromStorage();
+        });
+
+        function setupEventListeners() {
+            // Algorithm buttons
+            document.querySelectorAll('.algo-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selectAlgorithm(btn.dataset.algo);
+                });
+            });
+
+            // Control buttons
+            document.getElementById('startBtn').addEventListener('click', startSorting);
+            document.getElementById('pauseBtn').addEventListener('click', pauseSorting);
+            document.getElementById('stepBtn').addEventListener('click', toggleStepMode);
+            document.getElementById('resetBtn').addEventListener('click', resetVisualization);
+            document.getElementById('quizBtn').addEventListener('click', openQuiz);
+
+            // Array input
+            document.getElementById('arrayInput').addEventListener('input', updateArrayFromInput);
+            document.getElementById('arraySizeInput').addEventListener('input', generateRandomArray);
+            
+            // Speed slider
+            document.getElementById('speedSlider').addEventListener('input', updateSpeed);
+            
+            // Sound toggle
+            document.getElementById('soundToggle').addEventListener('change', toggleSound);
+            
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // View mode toggle
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    switchView(btn.dataset.view);
+                });
+            });
+        }
+
+        function initAudioContext() {
+            if (window.AudioContext || window.webkitAudioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(frequency, duration = 100) {
+            if (!soundEnabled || !audioContext) return;
+            
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = frequency;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration / 1000);
+            } catch (e) {
+                console.log('Sound playback failed:', e);
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = document.getElementById('soundToggle').checked;
+            const label = document.querySelector('.sound-toggle label');
+            if (soundEnabled) {
+                label.innerHTML = '<i class="fas fa-volume-up"></i> Sound-Effekte aktiviert';
+            } else {
+                label.innerHTML = '<i class="fas fa-volume-mute"></i> Sound-Effekte deaktiviert';
+            }
+        }
+
+        function toggleTheme() {
+            theme = theme === 'light' ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', theme);
+            
+            const icon = document.querySelector('.theme-toggle i');
+            if (theme === 'dark') {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+            
+            localStorage.setItem('theme', theme);
+        }
+
+        function loadThemeFromStorage() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                theme = savedTheme;
+                document.body.setAttribute('data-theme', theme);
+                const icon = document.querySelector('.theme-toggle i');
+                if (theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        function switchView(view) {
+            currentView = view;
+            
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.view === view);
+            });
+            
+            const boxContainer = document.getElementById('arrayContainer');
+            const barContainer = document.getElementById('barChartContainer');
+            
+            if (view === 'box') {
+                boxContainer.style.display = 'flex';
+                barContainer.style.display = 'none';
+            } else {
+                boxContainer.style.display = 'none';
+                barContainer.style.display = 'flex';
+                barContainer.classList.add('active');
+            }
+            
+            updateVisualization();
+        }
+
+        function selectAlgorithm(algoName) {
+            if (isRunning) return;
+            
+            currentAlgorithm = algoName;
+            
+            // Update UI
+            document.querySelectorAll('.algo-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.algo === algoName);
+            });
+            
+            // Update learning path
+            updateLearningPath();
+            
+            updateAlgorithmInfo();
+            resetVisualization();
+        }
+
+        function updateLearningPath() {
+            const algorithms = ['bubble', 'selection', 'insertion', 'merge', 'quick', 'heap'];
+            const currentIndex = algorithms.indexOf(currentAlgorithm);
+            
+            document.querySelectorAll('.path-step').forEach((step, index) => {
+                step.classList.remove('completed', 'current');
+                if (index < currentIndex) {
+                    step.classList.add('completed');
+                } else if (index === currentIndex) {
+                    step.classList.add('current');
+                }
+            });
+        }
+
+        function updateAlgorithmInfo() {
+            const algo = algorithms[currentAlgorithm];
+            
+            document.getElementById('vizTitle').textContent = algo.name;
+            document.getElementById('codeContent').innerHTML = algo.code;
+            
+            const algoInfo = document.getElementById('algoInfo');
+            algoInfo.innerHTML = `
+                <h4>
+                    <i class="fas fa-info-circle"></i>
+                    ${algo.name} - Algorithmus-Info
+                </h4>
+                <p>${algo.description}</p>
+                
+                <table class="complexity-table">
+                    <tr>
+                        <th>Best Case</th>
+                        <th>Average Case</th>
+                        <th>Worst Case</th>
+                        <th>Space</th>
+                        <th>Stabil</th>
+                    </tr>
+                    <tr>
+                        <td>${algo.complexity.best}</td>
+                        <td>${algo.complexity.average}</td>
+                        <td>${algo.complexity.worst}</td>
+                        <td>${algo.complexity.space}</td>
+                        <td>${algo.complexity.stable}</td>
+                    </tr>
+                </table>
+            `;
+        }
+
+        function updateArrayFromInput() {
+            const input = document.getElementById('arrayInput').value;
+            const numbers = input.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+            
+            if (numbers.length > 0 && numbers.length <= 50) {
+                array = numbers;
+                originalArray = [...array];
+                updateVisualization();
+                resetStatistics();
+            }
+        }
+
+        function generateRandomArray() {
+            const size = parseInt(document.getElementById('arraySizeInput').value) || 10;
+            if (size >= 3 && size <= 50) {
+                array = Array.from({length: size}, () => Math.floor(Math.random() * 100) + 1);
+                originalArray = [...array];
+                document.getElementById('arrayInput').value = array.join(',');
+                updateVisualization();
+                resetStatistics();
+            }
+        }
+
+        function loadPreset(type) {
+            let newArray;
+            const size = parseInt(document.getElementById('arraySizeInput').value) || 10;
+            
+            switch (type) {
+                case 'random':
+                    newArray = Array.from({length: size}, () => Math.floor(Math.random() * 50) + 1);
+                    playSound(400);
+                    break;
+                case 'reverse':
+                    newArray = Array.from({length: size}, (_, i) => size * 3 - i * 3);
+                    playSound(300);
+                    break;
+                case 'nearly':
+                    newArray = Array.from({length: size}, (_, i) => i * 3 + 1);
+                    // Swap a few random elements
+                    for (let i = 0; i < Math.floor(size / 4); i++) {
+                        const idx1 = Math.floor(Math.random() * size);
+                        const idx2 = Math.floor(Math.random() * size);
+                        [newArray[idx1], newArray[idx2]] = [newArray[idx2], newArray[idx1]];
+                    }
+                    playSound(500);
+                    break;
+                case 'duplicate':
+                    const values = [5, 10, 15, 20, 25];
+                    newArray = Array.from({length: size}, () => values[Math.floor(Math.random() * values.length)]);
+                    playSound(350);
+                    break;
+            }
+            
+            array = newArray;
+            originalArray = [...array];
+            document.getElementById('arrayInput').value = array.join(',');
+            updateVisualization();
+            resetStatistics();
+        }
+
+        function updateVisualization() {
+            if (currentView === 'box') {
+                updateArrayVisualization();
+            } else {
+                updateBarChartVisualization();
+            }
+            updatePointers();
+        }
+
+        function updateArrayVisualization() {
+            const container = document.getElementById('arrayContainer');
+            container.innerHTML = '';
+            
+            array.forEach((value, index) => {
+                const element = document.createElement('div');
+                element.className = 'array-element';
+                element.id = `element-${index}`;
+                element.innerHTML = `
+                    <div class="element-index">${index}</div>
+                    ${value}
+                `;
+                container.appendChild(element);
+            });
+        }
+
+        function updateBarChartVisualization() {
+            const container = document.getElementById('barChartContainer');
+            container.innerHTML = '';
+            
+            const maxValue = Math.max(...array);
+            
+            array.forEach((value, index) => {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.id = `bar-${index}`;
+                bar.style.height = `${(value / maxValue) * 380}px`;
+                bar.textContent = value;
+                container.appendChild(bar);
+            });
+        }
+
+        function updatePointers() {
+            const container = document.getElementById('pointers');
+            container.innerHTML = '';
+            
+            array.forEach((_, index) => {
+                const pointer = document.createElement('div');
+                pointer.className = 'pointer';
+                pointer.id = `pointer-${index}`;
+                container.appendChild(pointer);
+            });
+        }
+
+        function updateSpeed() {
+            speed = parseInt(document.getElementById('speedSlider').value);
+            document.getElementById('speedDisplay').textContent = `${speed}x`;
+            document.getElementById('currentSpeed').textContent = `${speed}x`;
+        }
+
+        async function startSorting() {
+            if (isPaused) {
+                isPaused = false;
+                resumeAnimation();
+            } else {
+                isRunning = true;
+                startTime = Date.now();
+                resetStatistics();
+                
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('pauseBtn').disabled = false;
+                document.getElementById('stepBtn').disabled = true;
+                
+                await runAlgorithm();
+                
+                // Save to history
+                addToHistory();
+            }
+        }
+
+        function pauseSorting() {
+            isPaused = true;
+            clearTimeout(animationId);
+            
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('pauseBtn').disabled = true;
+            
+            const stepInfo = document.getElementById('stepInfo');
+            stepInfo.textContent = 'Pausiert';
+        }
+
+        function toggleStepMode() {
+            stepMode = !stepMode;
+            const btn = document.getElementById('stepBtn');
+            
+            if (stepMode) {
+                btn.innerHTML = '<i class="fas fa-forward"></i> Nächster Schritt';
+                btn.classList.add('btn-primary');
+                btn.classList.remove('btn-secondary');
+                
+                // Show step explanation
+                document.getElementById('stepExplanation').classList.add('active');
+            } else {
+                btn.innerHTML = '<i class="fas fa-step-forward"></i> Einzelschritt';
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-secondary');
+                
+                // Hide step explanation
+                document.getElementById('stepExplanation').classList.remove('active');
+            }
+        }
+
+        function resetVisualization() {
+            isRunning = false;
+            isPaused = false;
+            stepMode = false;
+            currentStep = 0;
+            clearTimeout(animationId);
+            
+            array = [...originalArray];
+            updateVisualization();
+            resetStatistics();
+            clearHighlights();
+            
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('pauseBtn').disabled = true;
+            document.getElementById('stepBtn').disabled = false;
+            document.getElementById('stepInfo').textContent = 'Bereit zum Start';
+            document.getElementById('stepExplanation').classList.remove('active');
+            
+            playSound(200, 150);
+        }
+
+        function resetStatistics() {
+            stats = { comparisons: 0, swaps: 0, accesses: 0 };
+            updateStatistics();
+        }
+
+        function updateStatistics() {
+            document.getElementById('comparisons').textContent = stats.comparisons;
+            document.getElementById('swaps').textContent = stats.swaps;
+            document.getElementById('accesses').textContent = stats.accesses;
+            
+            if (startTime) {
+                const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+                document.getElementById('timeElapsed').textContent = `${elapsed}s`;
+            } else {
+                document.getElementById('timeElapsed').textContent = '0.0s';
+            }
+            
+            const progress = Math.round((currentStep / Math.max(totalSteps, 1)) * 100);
+            document.getElementById('progress').textContent = `${progress}%`;
+        }
+
+        async function runAlgorithm() {
+            clearHighlights();
+            
+            switch (currentAlgorithm) {
+                case 'bubble':
+                    await bubbleSort();
+                    break;
+                case 'selection':
+                    await selectionSort();
+                    break;
+                case 'insertion':
+                    await insertionSort();
+                    break;
+                case 'merge':
+                    await mergeSort(0, array.length - 1);
+                    break;
+                case 'quick':
+                    await quickSort(0, array.length - 1);
+                    break;
+                case 'heap':
+                    await heapSort();
+                    break;
+            }
+            
+            if (!isPaused && isRunning) {
+                await highlightSorted();
+                isRunning = false;
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('pauseBtn').disabled = true;
+                document.getElementById('stepInfo').textContent = 'Sortierung abgeschlossen!';
+                playSound(800, 300);
+            }
+        }
+
+        async function bubbleSort() {
+            const n = array.length;
+            totalSteps = n * (n - 1) / 2;
+            
+            for (let i = 0; i < n - 1; i++) {
+                let swapped = false;
+                
+                for (let j = 0; j < n - i - 1; j++) {
+                    if (!isRunning) return;
+                    currentStep++;
+                    
+                    await highlightComparison(j, j + 1, 1);
+                    updateStepExplanation(`Vergleiche Element ${j} (${array[j]}) mit Element ${j + 1} (${array[j + 1]})`);
+                    stats.comparisons++;
+                    stats.accesses += 2;
+                    
+                    if (array[j] > array[j + 1]) {
+                        await swap(j, j + 1);
+                        stats.swaps++;
+                        swapped = true;
+                        updateStepExplanation(`Tausche ${array[j + 1]} und ${array[j]}, da ${array[j]} > ${array[j + 1]}`);
+                    }
+                    
+                    updateStatistics();
+                    await delay();
+                }
+                
+                // Mark element as sorted
+                markAsSorted(n - 1 - i);
+                
+                // Optimierung: Früher Abbruch
+                if (!swapped) {
+                    highlightCodeLine(5);
+                    updateStepExplanation('Keine Tauschvorgänge mehr - Array ist sortiert!');
+                    await delay();
+                    break;
+                }
+            }
+            
+            // Mark first element as sorted
+            markAsSorted(0);
+        }
+
+        async function selectionSort() {
+            const n = array.length;
+            totalSteps = n * (n - 1) / 2;
+            
+            for (let i = 0; i < n - 1; i++) {
+                if (!isRunning) return;
+                let minIndex = i;
+                
+                await highlightElement(i, 'pivot');
+                updateStepExplanation(`Suche das kleinste Element ab Position ${i}`);
+                
+                for (let j = i + 1; j < n; j++) {
+                    if (!isRunning) return;
+                    currentStep++;
+                    
+                    await highlightComparison(minIndex, j, 2);
+                    stats.comparisons++;
+                    stats.accesses += 2;
+                    
+                    if (array[j] < array[minIndex]) {
+                        clearHighlight(minIndex);
+                        minIndex = j;
+                        await highlightElement(minIndex, 'pivot');
+                        updateStepExplanation(`Neues Minimum gefunden: ${array[minIndex]} an Position ${minIndex}`);
+                    }
+                    
+                    updateStatistics();
+                    await delay();
+                }
+                
+                if (minIndex !== i) {
+                    await swap(i, minIndex);
+                    stats.swaps++;
+                    updateStepExplanation(`Tausche Minimum ${array[i]} an Position ${i}`);
+                }
+                
+                clearHighlight(minIndex);
+                markAsSorted(i);
+            }
+            
+            markAsSorted(n - 1);
+        }
+
+        async function insertionSort() {
+            const n = array.length;
+            totalSteps = n * (n - 1) / 2;
+            
+            markAsSorted(0);
+            
+            for (let i = 1; i < n; i++) {
+                if (!isRunning) return;
+                let key = array[i];
+                let j = i - 1;
+                
+                await highlightElement(i, 'pivot');
+                updateStepExplanation(`Füge Element ${key} in den sortierten Teil ein`);
+                
+                while (j >= 0 && array[j] > key) {
+                    if (!isRunning) return;
+                    currentStep++;
+                    
+                    await highlightComparison(j, j + 1, 3);
+                    stats.comparisons++;
+                    stats.accesses += 2;
+                    
+                    array[j + 1] = array[j];
+                    updateElementValue(j + 1, array[j + 1]);
+                    updateStepExplanation(`Verschiebe ${array[j]} nach rechts`);
+                    
+                    j--;
+                    stats.swaps++;
+                    updateStatistics();
+                    await delay();
+                }
+                
+                array[j + 1] = key;
+                updateElementValue(j + 1, key);
+                updateStepExplanation(`Füge ${key} an Position ${j + 1} ein`);
+                
+                clearHighlight(i);
+                markAsSorted(i);
+            }
+        }
+
+        async function mergeSort(left, right) {
+            if (left >= right || !isRunning) return;
+            
+            const mid = Math.floor((left + right) / 2);
+            
+            updateStepExplanation(`Teile Array von Position ${left} bis ${right}`);
+            await delay();
+            
+            await mergeSort(left, mid);
+            await mergeSort(mid + 1, right);
+            await merge(left, mid, right);
+        }
+
+        async function merge(left, mid, right) {
+            const leftArr = [];
+            const rightArr = [];
+            
+            for (let i = left; i <= mid; i++) {
+                leftArr.push(array[i]);
+            }
+            for (let i = mid + 1; i <= right; i++) {
+                rightArr.push(array[i]);
+            }
+            
+            let i = 0, j = 0, k = left;
+            
+            while (i < leftArr.length && j < rightArr.length) {
+                if (!isRunning) return;
+                currentStep++;
+                
+                await highlightComparison(k, k, 4);
+                stats.comparisons++;
+                
+                if (leftArr[i] <= rightArr[j]) {
+                    array[k] = leftArr[i];
+                    updateStepExplanation(`Füge ${leftArr[i]} aus linkem Array ein`);
+                    i++;
+                } else {
+                    array[k] = rightArr[j];
+                    updateStepExplanation(`Füge ${rightArr[j]} aus rechtem Array ein`);
+                    j++;
+                }
+                
+                updateElementValue(k, array[k]);
+                k++;
+                
+                updateStatistics();
+                await delay();
+            }
+            
+            while (i < leftArr.length) {
+                array[k] = leftArr[i];
+                updateElementValue(k, array[k]);
+                i++;
+                k++;
+            }
+            
+            while (j < rightArr.length) {
+                array[k] = rightArr[j];
+                updateElementValue(k, array[k]);
+                j++;
+                k++;
+            }
+            
+            // Mark merged section as sorted
+            for (let idx = left; idx <= right; idx++) {
+                markAsSorted(idx);
+            }
+        }
+
+        async function quickSort(low, high) {
+            if (low < high && isRunning) {
+                const pi = await partition(low, high);
+                await quickSort(low, pi - 1);
+                await quickSort(pi + 1, high);
+            }
+        }
+
+        async function partition(low, high) {
+            const pivot = array[high];
+            await highlightElement(high, 'pivot');
+            updateStepExplanation(`Pivot gewählt: ${pivot} an Position ${high}`);
+            
+            let i = low - 1;
+            
+            for (let j = low; j < high; j++) {
+                if (!isRunning) return i + 1;
+                currentStep++;
+                
+                await highlightComparison(j, high, 5);
+                stats.comparisons++;
+                stats.accesses += 2;
+                
+                if (array[j] < pivot) {
+                    i++;
+                    if (i !== j) {
+                        await swap(i, j);
+                        stats.swaps++;
+                        updateStepExplanation(`Tausche ${array[j]} mit ${array[i]}, da kleiner als Pivot`);
+                    }
+                }
+                
+                updateStatistics();
+                await delay();
+            }
+            
+            await swap(i + 1, high);
+            updateStepExplanation(`Pivot ${array[i + 1]} an finaler Position ${i + 1}`);
+            clearHighlight(high);
+            markAsSorted(i + 1);
+            
+            return i + 1;
+        }
+
+        async function heapSort() {
+            const n = array.length;
+            
+            // Build max heap
+            updateStepExplanation('Baue Max-Heap auf...');
+            for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+                if (!isRunning) return;
+                await heapify(n, i);
+            }
+            
+            // Extract elements from heap
+            for (let i = n - 1; i > 0; i--) {
+                if (!isRunning) return;
+                
+                // Move current root to end
+                await swap(0, i);
+                updateStepExplanation(`Verschiebe größtes Element ${array[i]} ans Ende`);
+                markAsSorted(i);
+                
+                // Heapify reduced heap
+                await heapify(i, 0);
+            }
+            
+            markAsSorted(0);
+        }
+
+        async function heapify(n, i) {
+            let largest = i;
+            const left = 2 * i + 1;
+            const right = 2 * i + 2;
+            
+            if (left < n) {
+                await highlightComparison(largest, left, 6);
+                stats.comparisons++;
+                if (array[left] > array[largest]) {
+                    largest = left;
+                }
+                await delay();
+            }
+            
+            if (right < n) {
+                await highlightComparison(largest, right, 7);
+                stats.comparisons++;
+                if (array[right] > array[largest]) {
+                    largest = right;
+                }
+                await delay();
+            }
+            
+            if (largest !== i) {
+                await swap(i, largest);
+                stats.swaps++;
+                updateStepExplanation(`Heapify: Tausche ${array[largest]} mit ${array[i]}`);
+                await heapify(n, largest);
+            }
+        }
+
+        async function swap(i, j) {
+            await highlightSwap(i, j);
+            [array[i], array[j]] = [array[j], array[i]];
+            updateElementValue(i, array[i]);
+            updateElementValue(j, array[j]);
+            
+            // Play swap sound
+            playSound(300 + array[i] * 5, 50);
+        }
+
+        async function highlightComparison(i, j, line) {
+            clearHighlights();
+            highlightCodeLine(line);
+            
+            if (currentView === 'box') {
+                const el1 = document.getElementById(`element-${i}`);
+                const el2 = document.getElementById(`element-${j}`);
+                if (el1) el1.classList.add('comparing');
+                if (el2) el2.classList.add('comparing');
+            } else {
+                const bar1 = document.getElementById(`bar-${i}`);
+                const bar2 = document.getElementById(`bar-${j}`);
+                if (bar1) bar1.classList.add('comparing');
+                if (bar2) bar2.classList.add('comparing');
+            }
+            
+            document.getElementById('stepInfo').textContent = 
+                `Vergleiche Element ${i} (${array[i]}) mit Element ${j} (${array[j]})`;
+            
+            // Play comparison sound
+            playSound(200 + array[i] * 3, 30);
+        }
+
+        async function highlightSwap(i, j) {
+            clearHighlights();
+            
+            if (currentView === 'box') {
+                const el1 = document.getElementById(`element-${i}`);
+                const el2 = document.getElementById(`element-${j}`);
+                if (el1) el1.classList.add('swapping');
+                if (el2) el2.classList.add('swapping');
+            } else {
+                const bar1 = document.getElementById(`bar-${i}`);
+                const bar2 = document.getElementById(`bar-${j}`);
+                if (bar1) bar1.classList.add('swapping');
+                if (bar2) bar2.classList.add('swapping');
+            }
+            
+            document.getElementById('stepInfo').textContent = 
+                `Tausche Element ${i} (${array[i]}) mit Element ${j} (${array[j]})`;
+            
+            await new Promise(resolve => setTimeout(resolve, 300));
+        }
+
+        async function highlightElement(index, type) {
+            clearHighlights();
+            
+            if (currentView === 'box') {
+                const element = document.getElementById(`element-${index}`);
+                if (element) element.classList.add(type);
+            } else {
+                const bar = document.getElementById(`bar-${index}`);
+                if (bar) bar.classList.add(type);
+            }
+        }
+
+        function clearHighlight(index) {
+            if (currentView === 'box') {
+                const element = document.getElementById(`element-${index}`);
+                if (element) {
+                    element.classList.remove('comparing', 'swapping', 'pivot', 'selected');
+                }
+            } else {
+                const bar = document.getElementById(`bar-${index}`);
+                if (bar) {
+                    bar.classList.remove('comparing', 'swapping', 'pivot', 'selected');
+                }
+            }
+        }
+
+        function clearHighlights() {
+            if (currentView === 'box') {
+                document.querySelectorAll('.array-element').forEach(el => {
+                    el.classList.remove('comparing', 'swapping', 'pivot', 'selected');
+                });
+            } else {
+                document.querySelectorAll('.bar').forEach(bar => {
+                    bar.classList.remove('comparing', 'swapping', 'pivot', 'selected');
+                });
+            }
+            
+            document.querySelectorAll('.code-line').forEach(line => {
+                line.classList.remove('highlight');
+            });
+        }
+
+        function highlightCodeLine(line) {
+            document.querySelectorAll('.code-line').forEach(l => l.classList.remove('highlight'));
+            const lineEl = document.getElementById(`line-${line}`);
+            if (lineEl) {
+                lineEl.classList.add('highlight');
+            }
+        }
+
+        function markAsSorted(index) {
+            if (currentView === 'box') {
+                const element = document.getElementById(`element-${index}`);
+                if (element) element.classList.add('sorted');
+            } else {
+                const bar = document.getElementById(`bar-${index}`);
+                if (bar) bar.classList.add('sorted');
+            }
+            
+            // Play sorted sound
+            playSound(600 + index * 10, 80);
+        }
+
+        async function highlightSorted() {
+            for (let i = 0; i < array.length; i++) {
+                markAsSorted(i);
+                await new Promise(resolve => setTimeout(resolve, 50));
+            }
+        }
+
+        function updateElementValue(index, value) {
+            if (currentView === 'box') {
+                const element = document.getElementById(`element-${index}`);
+                if (element) {
+                    element.innerHTML = `
+                        <div class="element-index">${index}</div>
+                        ${value}
+                    `;
+                }
+            } else {
+                const bar = document.getElementById(`bar-${index}`);
+                if (bar) {
+                    const maxValue = Math.max(...array);
+                    bar.style.height = `${(value / maxValue) * 380}px`;
+                    bar.textContent = value;
+                }
+            }
+        }
+
+        function updateStepExplanation(text) {
+            if (stepMode) {
+                document.getElementById('stepExplanationText').textContent = text;
+            }
+        }
+
+        function delay() {
+            const delayTime = 1100 - (speed * 100);
+            
+            if (stepMode) {
+                return new Promise(resolve => {
+                    const nextStepHandler = () => {
+                        document.getElementById('stepBtn').removeEventListener('click', nextStepHandler);
+                        resolve();
+                    };
+                    document.getElementById('stepBtn').addEventListener('click', nextStepHandler);
+                });
+            }
+            
+            return new Promise(resolve => {
+                if (isPaused) {
+                    const checkPause = setInterval(() => {
+                        if (!isPaused) {
+                            clearInterval(checkPause);
+                            animationId = setTimeout(resolve, delayTime);
+                        }
+                    }, 100);
+                } else {
+                    animationId = setTimeout(resolve, delayTime);
+                }
+            });
+        }
+
+        function resumeAnimation() {
+            if (animationId) {
+                clearTimeout(animationId);
+            }
+            document.getElementById('stepInfo').textContent = 'Sortierung läuft...';
+        }
+
+        // Copy Code Function
+        function copyCode() {
+            const code = algorithms[currentAlgorithm].code.replace(/<[^>]*>/g, '');
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.querySelector('.copy-code-btn');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Kopiert!';
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            });
+        }
+
+        // Quiz Functions
+        const quizQuestions = [
+            {
+                question: 'Welcher Algorithmus hat die beste durchschnittliche Zeitkomplexität?',
+                options: ['Bubble Sort', 'Selection Sort', 'Merge Sort', 'Insertion Sort'],
+                correct: 2,
+                explanation: 'Merge Sort hat eine durchschnittliche Zeitkomplexität von O(n log n), während die anderen O(n²) haben.'
+            },
+            {
+                question: 'Welcher Sortieralgorithmus ist NICHT stabil?',
+                options: ['Bubble Sort', 'Merge Sort', 'Heap Sort', 'Insertion Sort'],
+                correct: 2,
+                explanation: 'Heap Sort ist nicht stabil, da gleiche Elemente ihre relative Reihenfolge verlieren können.'
+            },
+            {
+                question: 'Welcher Algorithmus nutzt das "Divide and Conquer" Prinzip?',
+                options: ['Bubble Sort', 'Selection Sort', 'Quick Sort', 'Insertion Sort'],
+                correct: 2,
+                explanation: 'Quick Sort teilt das Array rekursiv in kleinere Teile und sortiert diese.'
+            },
+            {
+                question: 'Welcher Algorithmus ist am besten für fast sortierte Arrays?',
+                options: ['Quick Sort', 'Heap Sort', 'Insertion Sort', 'Selection Sort'],
+                correct: 2,
+                explanation: 'Insertion Sort hat eine beste Zeitkomplexität von O(n) für fast sortierte Arrays.'
+            },
+            {
+                question: 'Welche Raumkomplexität hat Merge Sort?',
+                options: ['O(1)', 'O(log n)', 'O(n)', 'O(n²)'],
+                correct: 2,
+                explanation: 'Merge Sort benötigt O(n) zusätzlichen Speicher für die temporären Arrays.'
+            }
+        ];
+
+        let currentQuizQuestion = 0;
+
+        function openQuiz() {
+            currentQuizQuestion = Math.floor(Math.random() * quizQuestions.length);
+            const question = quizQuestions[currentQuizQuestion];
+            
+            document.getElementById('quizQuestionText').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'quiz-option';
+                optionDiv.textContent = option;
+                optionDiv.onclick = () => selectQuizOption(index);
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            document.getElementById('quizResult').style.display = 'none';
+            document.getElementById('quizModal').classList.add('active');
+            
+            playSound(500, 100);
+        }
+
+        function selectQuizOption(index) {
+            document.querySelectorAll('.quiz-option').forEach((option, i) => {
+                option.classList.remove('selected');
+                if (i === index) {
+                    option.classList.add('selected');
+                }
+            });
+        }
+
+        function submitQuizAnswer() {
+            const selected = document.querySelector('.quiz-option.selected');
+            if (!selected) {
+                alert('Bitte wählen Sie eine Antwort!');
+                return;
+            }
+            
+            const selectedIndex = Array.from(document.querySelectorAll('.quiz-option')).indexOf(selected);
+            const question = quizQuestions[currentQuizQuestion];
+            
+            const resultDiv = document.getElementById('quizResult');
+            
+            if (selectedIndex === question.correct) {
+                selected.classList.add('correct');
+                resultDiv.innerHTML = `
+                    <h4 style="color: var(--success);">
+                        <i class="fas fa-check-circle"></i> Richtig!
+                    </h4>
+                    <p>${question.explanation}</p>
+                `;
+                playSound(800, 200);
+            } else {
+                selected.classList.add('incorrect');
+                document.querySelectorAll('.quiz-option')[question.correct].classList.add('correct');
+                resultDiv.innerHTML = `
+                    <h4 style="color: var(--danger);">
+                        <i class="fas fa-times-circle"></i> Falsch!
+                    </h4>
+                    <p>${question.explanation}</p>
+                `;
+                playSound(200, 200);
+            }
+            
+            resultDiv.style.display = 'block';
+        }
+
+        function closeQuiz() {
+            document.getElementById('quizModal').classList.remove('active');
+        }
+
+        // Comparison Function
+        function openComparison() {
+            // This would open a comparison view (not fully implemented here)
+            alert('Algorithmus-Vergleich wird in einer zukünftigen Version verfügbar sein!');
+        }
+
+        // History Functions
+        function addToHistory() {
+            const historyItem = {
+                algorithm: algorithms[currentAlgorithm].name,
+                arraySize: array.length,
+                comparisons: stats.comparisons,
+                swaps: stats.swaps,
+                time: ((Date.now() - startTime) / 1000).toFixed(1),
+                timestamp: new Date().toLocaleString('de-DE')
+            };
+            
+            sortingHistory.unshift(historyItem);
+            if (sortingHistory.length > 10) {
+                sortingHistory.pop();
+            }
+            
+            updateHistoryDisplay();
+            saveHistoryToStorage();
+        }
+
+        function updateHistoryDisplay() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            
+            if (sortingHistory.length === 0) {
+                historyList.innerHTML = '<div style="text-align: center; color: #64748b;">Noch keine Sortierungen</div>';
+                return;
+            }
+            
+            sortingHistory.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <div>
+                        <div class="history-algo">${item.algorithm}</div>
+                        <div class="history-stats">
+                            ${item.arraySize} Elemente • ${item.comparisons} Vergleiche • ${item.time}s
+                        </div>
+                    </div>
+                    <div style="font-size: 0.7rem; color: #94a3b8;">
+                        ${item.timestamp}
+                    </div>
+                `;
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        function clearHistory() {
+            if (confirm('Möchten Sie wirklich den gesamten Verlauf löschen?')) {
+                sortingHistory = [];
+                updateHistoryDisplay();
+                saveHistoryToStorage();
+                playSound(300, 100);
+            }
+        }
+
+        function saveHistoryToStorage() {
+            localStorage.setItem('sortingHistory', JSON.stringify(sortingHistory));
+        }
+
+        function loadHistoryFromStorage() {
+            const saved = localStorage.getItem('sortingHistory');
+            if (saved) {
+                sortingHistory = JSON.parse(saved);
+                updateHistoryDisplay();
+            }
+        }
+    </script>
+</body>
+</html>
