@@ -83,3 +83,12 @@ Aufgabe d: Geben Sie alle SQL-Anweisungen an, welche notwendig sind, um einen ne
 CREATE USER 'Maier' IDENTIFIED BY '5jk2T?';
 GRANT SELECT ON Objekt TO 'Maier';
 ````
+
+# Lösungsstrategie
+1. SELECT
+2. Benötigete Attribute und Tabellen ermitteln
+3. zu verknüpfende Tabelle Auflisten mit FROM TABLE1, TABLE2 etc.
+4. WHERE //ID's verknüpfen
+5. AND ggf. weitere Bedingungen
+6. ODER BY DESC | ASC
+7. SELECT // Spalten angeben und auf Aliase der Aufgabe achten
