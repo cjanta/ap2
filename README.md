@@ -6,3 +6,8 @@ Prüfungstermin-IHK: **26.11.2025**
 
 ## Teil 2 - Donzent: bartholot 15.09.-???
 - siehe Ordner: bartholot
+
+# Schriftlicher Vorbereitungskurs II #468238
+
+## Dozentin: frantzen 27.10.2025-26.11.2025
+- siehe Ordner: frantzen
