@@ -40,5 +40,5 @@ Bsp.:
 - CRUD-Methoden
 - Entwurfsmuster (Singleton, Factory-Method, Observer, Adapter, MVC / MVVM)
 - Pseudocode
-- Testen: Anweisungs- Zweig- Prozedurüberdeckung
+- Testen: Testabdeckungen
 - Qualitätsmerkmale von Software (ISO 9126 und 25001)
