@@ -24,7 +24,7 @@ nicht so gut strukturiert deshalb nur anmerkungen
 - IMMER 25 für Diagramme (ER-Diagramm, auch Aktivitätsdiagramm,Klassen, Anwendungsfall, Zustand oder Sequenzdiagramm)
 - Für 15 jweils kann immer alles kommen lowLevel Zeug, ui/ux, netwerktechnick, sogar pseudocode, json perhand erstellen ka.
 
-
+fazit: diagramme + 30 pkt trivial persuit
 
 
 ## 3. WISO
