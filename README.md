@@ -16,7 +16,7 @@ Anhand der letzten 5 und Vorbereitungskursen(cc, uform)
 - Diagramme oder Testbezogene Aufgaben 20
 - Rest Fragen und varianzen in der punkteverteilung der Themen
 
-
+# Prio 2
 ## 1.Planen eines Softwareprodukts
 Anhand der letzten 5 und Vorbereitungskursen(cc, uform)
 nicht so gut strukturiert deshalb nur anmerkungen
@@ -24,9 +24,9 @@ nicht so gut strukturiert deshalb nur anmerkungen
 - IMMER 25 für Diagramme (ER-Diagramm, auch Aktivitätsdiagramm,Klassen, Anwendungsfall, Zustand oder Sequenzdiagramm)
 - Für 15 jweils kann immer alles kommen lowLevel Zeug, ui/ux, netwerktechnick, sogar pseudocode, json perhand erstellen ka.
 
-fazit: diagramme + 30 pkt trivial persuit
+fazit: diagramme + 30 pkt trivial persuit (uform 200 karteikarten durch + und 5 Simulationen)
 
-
+# Prio 3
 ## 3. WISO
 - 300/400 Karteikarten geübt
 - 60 minuten, multible choice glhf where > 50 pkt.
