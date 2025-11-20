@@ -16,6 +16,8 @@ Anhand der letzten 5 und Vorbereitungskursen(cc, uform)
 - Diagramme oder Testbezogene Aufgaben 20
 - Rest Fragen und varianzen in der punkteverteilung der Themen
 
+fazit: bei 3.Normalisierung und sql glänzen und restliche zeit diagramme dann pseudocode
+
 # Prio 2
 ## 1.Planen eines Softwareprodukts
 Anhand der letzten 5 und Vorbereitungskursen(cc, uform)
