@@ -67,7 +67,7 @@ gegebenenfalls gut mit dem entwickelten Endprodukt visualisiert werden.
  - Problemerfassung, Problemdarstellung und Problemlösung
  - Argumentation und Begründung
 
-# Prio 1
+# Prio 1 [erledigt]
 ## 2.Entwicklung und Umsetzung von Algorithmen
 Anhand der letzten 5 und Vorbereitungskursen(cc, uform)
 
