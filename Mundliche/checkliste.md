@@ -10,7 +10,12 @@
 Tipps:
 - Vortrag üben, ideal auswendig gelernt ohne das man dies heraushört
 - Timing üben, Meilensteine, Zeitplanung
-- Körperhaltung und Blickkontakt
+- Körperhaltung aufrecht und offen
+- Blickkontakt 
+- mimik und gestik kontrollieren
+- Sprache: langsam, deutlich
+- Sprache: kurze Sprachpausen
+- Fachsprache benutzen / authentisch bleiben
 
 
 ## Allgemeines zur Mündlichen
