@@ -1,5 +1,17 @@
 # Vorbereitung Mündliche Prüfung
 
+1.) Inhalt
+2.) Umfeld
+3.) Projektbeschreibung
+4.) Durchführung
+5.) Ergebnis
+6.) Zukunft
+
+Tipps:
+- Vortrag üben, ideal auswendig gelernt ohne das man dies heraushört
+- Timing üben, Meilensteine, Zeitplanung
+- Körperhaltung und Blickkontakt
+
 
 ## Allgemeines zur Mündlichen
 Allgemeines aus der Handreichung ihk-pfalz
