@@ -29,7 +29,7 @@ einen entscheidenden Einfluss auf das Prüfungsergebnis. ...
 
 ## Kriterien P: Präsentation
 Benotung erfolgt durch: 1-6 wobei 4 ^ 50 Punkten oder mehr als bestanden gilt.
-Kriterien sind wohl nicht gewichtet zumindest keine Angabe in den ihl-pfalz matrizen.
+Kriterien sind wohl nicht gewichtet zumindest keine Angabe in den ihk-pfalz matrizen.
 
 1. Unterlagen, Struktur
 - Einstieg
